@@ -823,10 +823,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameInputSystem: {fileID: 1118187122}
+  cinemachineCamera: {fileID: 833557368}
   moveSpeed: 50
   rotationSpeed: 5
+  zoomSpeed: 20
   edgeScrollSize: 20
+  fieldOfViewMax: 50
+  fieldOfViewMin: 10
   useEdgeScrool: 0
+  useDragPan: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
