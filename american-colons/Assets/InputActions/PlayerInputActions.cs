@@ -55,12 +55,21 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""DragPan"",
-                    ""type"": ""Button"",
+                    ""name"": ""MouseDrag"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""63c2e6a1-82fe-43d9-9777-76db8f263fde"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
-                    ""interactions"": ""Hold"",
+                    ""interactions"": ""MouseDrag"",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Scroll"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""70a02b4d-d0aa-4e1a-a371-219d07c48ac3"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
                     ""initialStateCheck"": false
                 }
             ],
@@ -165,15 +174,81 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""e53a2124-a507-445e-8a73-f679ada41e31"",
-                    ""path"": """",
+                    ""name"": ""Mouse Drag"",
+                    ""id"": ""9b225047-6cc9-4258-93c0-042afe4a0478"",
+                    ""path"": ""MouseDrag"",
+                    ""interactions"": ""MouseDrag"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseDrag"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Button"",
+                    ""id"": ""695f8582-6378-4843-b72b-57e81597b6de"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""DragPan"",
+                    ""action"": ""MouseDrag"",
                     ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Axis1"",
+                    ""id"": ""7ee30dc2-7c60-4140-a547-d358a50997cb"",
+                    ""path"": ""<Mouse>/delta/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseDrag"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Axis2"",
+                    ""id"": ""8e46ed25-9cd6-4299-906e-25d21c153d9a"",
+                    ""path"": ""<Mouse>/delta/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseDrag"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Mouse scroll"",
+                    ""id"": ""3f44c51e-5f81-4360-8bab-ec30913cf9c3"",
+                    ""path"": ""1DAxis(whichSideWins=1)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Scroll"",
+                    ""isComposite"": true,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""c57dabe2-4aeb-48ca-a782-d333779be645"",
+                    ""path"": ""<Mouse>/scroll/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Scroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""507bf637-ed10-4a8f-97ee-1adfa315563d"",
+                    ""path"": ""<Mouse>/scroll/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Scroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -185,7 +260,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Camera_Movement = m_Camera.FindAction("Movement", throwIfNotFound: true);
         m_Camera_Rotation = m_Camera.FindAction("Rotation", throwIfNotFound: true);
         m_Camera_ScrollEdge = m_Camera.FindAction("ScrollEdge", throwIfNotFound: true);
-        m_Camera_DragPan = m_Camera.FindAction("DragPan", throwIfNotFound: true);
+        m_Camera_MouseDrag = m_Camera.FindAction("MouseDrag", throwIfNotFound: true);
+        m_Camera_Scroll = m_Camera.FindAction("Scroll", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -250,7 +326,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Camera_Movement;
     private readonly InputAction m_Camera_Rotation;
     private readonly InputAction m_Camera_ScrollEdge;
-    private readonly InputAction m_Camera_DragPan;
+    private readonly InputAction m_Camera_MouseDrag;
+    private readonly InputAction m_Camera_Scroll;
     public struct CameraActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -258,7 +335,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_Camera_Movement;
         public InputAction @Rotation => m_Wrapper.m_Camera_Rotation;
         public InputAction @ScrollEdge => m_Wrapper.m_Camera_ScrollEdge;
-        public InputAction @DragPan => m_Wrapper.m_Camera_DragPan;
+        public InputAction @MouseDrag => m_Wrapper.m_Camera_MouseDrag;
+        public InputAction @Scroll => m_Wrapper.m_Camera_Scroll;
         public InputActionMap Get() { return m_Wrapper.m_Camera; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -277,9 +355,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @ScrollEdge.started += instance.OnScrollEdge;
             @ScrollEdge.performed += instance.OnScrollEdge;
             @ScrollEdge.canceled += instance.OnScrollEdge;
-            @DragPan.started += instance.OnDragPan;
-            @DragPan.performed += instance.OnDragPan;
-            @DragPan.canceled += instance.OnDragPan;
+            @MouseDrag.started += instance.OnMouseDrag;
+            @MouseDrag.performed += instance.OnMouseDrag;
+            @MouseDrag.canceled += instance.OnMouseDrag;
+            @Scroll.started += instance.OnScroll;
+            @Scroll.performed += instance.OnScroll;
+            @Scroll.canceled += instance.OnScroll;
         }
 
         private void UnregisterCallbacks(ICameraActions instance)
@@ -293,9 +374,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @ScrollEdge.started -= instance.OnScrollEdge;
             @ScrollEdge.performed -= instance.OnScrollEdge;
             @ScrollEdge.canceled -= instance.OnScrollEdge;
-            @DragPan.started -= instance.OnDragPan;
-            @DragPan.performed -= instance.OnDragPan;
-            @DragPan.canceled -= instance.OnDragPan;
+            @MouseDrag.started -= instance.OnMouseDrag;
+            @MouseDrag.performed -= instance.OnMouseDrag;
+            @MouseDrag.canceled -= instance.OnMouseDrag;
+            @Scroll.started -= instance.OnScroll;
+            @Scroll.performed -= instance.OnScroll;
+            @Scroll.canceled -= instance.OnScroll;
         }
 
         public void RemoveCallbacks(ICameraActions instance)
@@ -318,6 +402,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnRotation(InputAction.CallbackContext context);
         void OnScrollEdge(InputAction.CallbackContext context);
-        void OnDragPan(InputAction.CallbackContext context);
+        void OnMouseDrag(InputAction.CallbackContext context);
+        void OnScroll(InputAction.CallbackContext context);
     }
 }
