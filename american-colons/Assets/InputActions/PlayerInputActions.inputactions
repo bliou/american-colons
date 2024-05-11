@@ -196,37 +196,15 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Mouse scroll",
-                    "id": "3f44c51e-5f81-4360-8bab-ec30913cf9c3",
-                    "path": "1DAxis(whichSideWins=1)",
+                    "name": "",
+                    "id": "7927fe2d-71f2-427d-a9ac-b3f6947da962",
+                    "path": "<Mouse>/{ScrollVertical}",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Scroll",
-                    "isComposite": true,
+                    "isComposite": false,
                     "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "c57dabe2-4aeb-48ca-a782-d333779be645",
-                    "path": "<Mouse>/scroll/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Scroll",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "507bf637-ed10-4a8f-97ee-1adfa315563d",
-                    "path": "<Mouse>/scroll/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Scroll",
-                    "isComposite": false,
-                    "isPartOfComposite": true
                 }
             ]
         }

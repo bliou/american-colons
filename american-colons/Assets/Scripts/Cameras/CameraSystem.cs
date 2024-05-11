@@ -20,7 +20,7 @@ public class CameraSystem : MonoBehaviour
 
     private float targetFieldOfView = 50f;
 
-    private void FixedUpdate()
+    private void Update()
     {
         MoveCamera();
         ScrollOnEdge();
