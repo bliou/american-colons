@@ -35,7 +35,7 @@ public class CameraSystem : MonoBehaviour
         Vector3 inputDir = new Vector3(moveDirNormalized.x, 0, moveDirNormalized.y);
 
         Vector3 moveDir = transform.forward * inputDir.z + transform.right*inputDir.x;
-        transform.position += inputDir * moveSpeed * Time.deltaTime;
+        transform.position += moveDir * moveSpeed * Time.deltaTime;
     }
 
     private void ScrollOnEdge()
@@ -53,7 +53,7 @@ public class CameraSystem : MonoBehaviour
         if (mousePosition.y > Screen.height - edgeScrollSize) inputDir.z = 1f;
 
         Vector3 moveDir = transform.forward * inputDir.z + transform.right * inputDir.x;
-        transform.position += inputDir * moveSpeed * Time.deltaTime;
+        transform.position += moveDir * moveSpeed * Time.deltaTime;
     }
 
     private void DragPan()
@@ -68,7 +68,7 @@ public class CameraSystem : MonoBehaviour
         inputDir.z = dragPanDelta.y;
 
         Vector3 moveDir = transform.forward * inputDir.z + transform.right * inputDir.x;
-        transform.position += inputDir * moveSpeed * Time.deltaTime;
+        transform.position += moveDir * moveSpeed * Time.deltaTime;
     }
 
     private void RotateCamera()
