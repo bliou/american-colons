@@ -22,15 +22,9 @@ public class GridSystem : MonoBehaviour
         Draw();
     }
 
-    private Vector3Int GetGridCellWorldPosition()
+    private Vector3 GetGridCellWorldPosition()
     {
-        Ray ray = cameraSystem.ScreenPointToRay();
-        RaycastHit hit;
-        Vector3 gridWorldPosition = Vector3.zero;
-        if (Physics.Raycast(ray, out hit, 100, mask))
-        {
-            gridWorldPosition = hit.point;
-        }
+        Vector3 gridWorldPosition = cameraSystem.ScreenPointToRay(mask);
         Vector3Int gridPosition = grid.WorldToCell(gridWorldPosition);
         gridPosition.y = 0;
 
@@ -42,10 +36,11 @@ public class GridSystem : MonoBehaviour
         if (!drawGrid)
             return;
 
-        Vector3Int topLeftCorner = GetGridCellWorldPosition();
-        Vector3Int topRightCorner = new Vector3Int(topLeftCorner.x+1, topLeftCorner.y, topLeftCorner.z);
-        Vector3Int bottomRightCorner = new Vector3Int(topLeftCorner.x + 1, topLeftCorner.y, topLeftCorner.z + 1);
-        Vector3Int bottomLeftCorner = new Vector3Int(topLeftCorner.x, topLeftCorner.y, topLeftCorner.z + 1);
+        Vector3 topLeftCorner = GetGridCellWorldPosition();
+        topLeftCorner.y = 0.1f;
+        Vector3 topRightCorner = new Vector3(topLeftCorner.x+1, topLeftCorner.y, topLeftCorner.z);
+        Vector3 bottomRightCorner = new Vector3(topLeftCorner.x + 1, topLeftCorner.y, topLeftCorner.z + 1);
+        Vector3 bottomLeftCorner = new Vector3(topLeftCorner.x, topLeftCorner.y, topLeftCorner.z + 1);
 
         Debug.DrawLine(topLeftCorner, topRightCorner, Color.white);
         Debug.DrawLine(topLeftCorner, bottomLeftCorner, Color.white);
