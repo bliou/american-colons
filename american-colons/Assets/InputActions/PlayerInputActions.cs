@@ -46,7 +46,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""ScrollEdge"",
+                    ""name"": ""Position"",
                     ""type"": ""Value"",
                     ""id"": ""0e84b2a9-3635-44b7-8932-1b11fdac7b20"",
                     ""expectedControlType"": ""Vector2"",
@@ -169,7 +169,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ScrollEdge"",
+                    ""action"": ""Position"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -237,7 +237,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
         m_Camera_Movement = m_Camera.FindAction("Movement", throwIfNotFound: true);
         m_Camera_Rotation = m_Camera.FindAction("Rotation", throwIfNotFound: true);
-        m_Camera_ScrollEdge = m_Camera.FindAction("ScrollEdge", throwIfNotFound: true);
+        m_Camera_Position = m_Camera.FindAction("Position", throwIfNotFound: true);
         m_Camera_MouseDrag = m_Camera.FindAction("MouseDrag", throwIfNotFound: true);
         m_Camera_Scroll = m_Camera.FindAction("Scroll", throwIfNotFound: true);
     }
@@ -303,7 +303,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private List<ICameraActions> m_CameraActionsCallbackInterfaces = new List<ICameraActions>();
     private readonly InputAction m_Camera_Movement;
     private readonly InputAction m_Camera_Rotation;
-    private readonly InputAction m_Camera_ScrollEdge;
+    private readonly InputAction m_Camera_Position;
     private readonly InputAction m_Camera_MouseDrag;
     private readonly InputAction m_Camera_Scroll;
     public struct CameraActions
@@ -312,7 +312,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public CameraActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_Camera_Movement;
         public InputAction @Rotation => m_Wrapper.m_Camera_Rotation;
-        public InputAction @ScrollEdge => m_Wrapper.m_Camera_ScrollEdge;
+        public InputAction @Position => m_Wrapper.m_Camera_Position;
         public InputAction @MouseDrag => m_Wrapper.m_Camera_MouseDrag;
         public InputAction @Scroll => m_Wrapper.m_Camera_Scroll;
         public InputActionMap Get() { return m_Wrapper.m_Camera; }
@@ -330,9 +330,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Rotation.started += instance.OnRotation;
             @Rotation.performed += instance.OnRotation;
             @Rotation.canceled += instance.OnRotation;
-            @ScrollEdge.started += instance.OnScrollEdge;
-            @ScrollEdge.performed += instance.OnScrollEdge;
-            @ScrollEdge.canceled += instance.OnScrollEdge;
+            @Position.started += instance.OnPosition;
+            @Position.performed += instance.OnPosition;
+            @Position.canceled += instance.OnPosition;
             @MouseDrag.started += instance.OnMouseDrag;
             @MouseDrag.performed += instance.OnMouseDrag;
             @MouseDrag.canceled += instance.OnMouseDrag;
@@ -349,9 +349,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Rotation.started -= instance.OnRotation;
             @Rotation.performed -= instance.OnRotation;
             @Rotation.canceled -= instance.OnRotation;
-            @ScrollEdge.started -= instance.OnScrollEdge;
-            @ScrollEdge.performed -= instance.OnScrollEdge;
-            @ScrollEdge.canceled -= instance.OnScrollEdge;
+            @Position.started -= instance.OnPosition;
+            @Position.performed -= instance.OnPosition;
+            @Position.canceled -= instance.OnPosition;
             @MouseDrag.started -= instance.OnMouseDrag;
             @MouseDrag.performed -= instance.OnMouseDrag;
             @MouseDrag.canceled -= instance.OnMouseDrag;
@@ -379,7 +379,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     {
         void OnMovement(InputAction.CallbackContext context);
         void OnRotation(InputAction.CallbackContext context);
-        void OnScrollEdge(InputAction.CallbackContext context);
+        void OnPosition(InputAction.CallbackContext context);
         void OnMouseDrag(InputAction.CallbackContext context);
         void OnScroll(InputAction.CallbackContext context);
     }

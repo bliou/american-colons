@@ -23,7 +23,7 @@ public class GameInputSystem : MonoBehaviour
 
     public Vector2 GetMousePosition()
     {
-        return playerInputActions.Camera.ScrollEdge.ReadValue<Vector2>();
+        return playerInputActions.Camera.Position.ReadValue<Vector2>();
     }
 
     public Vector2 GetMouseDragDeltaVector()

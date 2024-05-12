@@ -29,6 +29,12 @@ public class CameraSystem : MonoBehaviour
         Zoom();
     }
 
+    public Ray ScreenPointToRay()
+    {
+        Vector3 mousePosition = gameInputSystem.GetMousePosition();
+        return Camera.main.ScreenPointToRay(mousePosition);
+    }
+
     private void MoveCamera()
     {
         Vector2 moveDirNormalized = gameInputSystem.GetMovementVectorNormalized();
