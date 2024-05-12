@@ -29,10 +29,18 @@ public class CameraSystem : MonoBehaviour
         Zoom();
     }
 
-    public Ray ScreenPointToRay()
+    public Vector3 ScreenPointToRay(LayerMask mask)
     {
+        Vector3 screenPointPosition = Vector3.zero;
         Vector3 mousePosition = gameInputSystem.GetMousePosition();
-        return Camera.main.ScreenPointToRay(mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 100, mask))
+        {
+            screenPointPosition = hit.point;
+        }
+
+        return screenPointPosition;
     }
 
     private void MoveCamera()
