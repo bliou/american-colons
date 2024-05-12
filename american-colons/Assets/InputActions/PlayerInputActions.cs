@@ -229,6 +229,105 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Building"",
+            ""id"": ""b87b9e2c-db2b-41a7-ae1d-5bba10c924f5"",
+            ""actions"": [
+                {
+                    ""name"": ""Build"",
+                    ""type"": ""Button"",
+                    ""id"": ""fceabfcc-6e56-4f8e-bf33-aeaee73fa490"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Destroy"",
+                    ""type"": ""Button"",
+                    ""id"": ""da257640-4e1d-470a-80f4-5696e4dd7438"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""BuildingSelection"",
+                    ""type"": ""Button"",
+                    ""id"": ""35439215-72f9-44b0-8b31-4d763bd28f3a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Cancel"",
+                    ""type"": ""Button"",
+                    ""id"": ""d2196f18-054f-4c71-87d8-e6be776277d1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""925c796b-19d1-429e-9c49-165fcfc4f1fd"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Build"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1e66271a-17fe-4c60-9617-6a7eafabcb51"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Destroy"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dffa4054-b1a7-41d6-a358-4ecba5047c05"",
+                    ""path"": ""<Keyboard>/0"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=0)"",
+                    ""groups"": """",
+                    ""action"": ""BuildingSelection"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f57ab1b0-bc49-455c-adce-146e90a1f974"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale"",
+                    ""groups"": """",
+                    ""action"": ""BuildingSelection"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b815c13a-e845-4833-b178-419aaabad036"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -240,6 +339,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Camera_Position = m_Camera.FindAction("Position", throwIfNotFound: true);
         m_Camera_MouseDrag = m_Camera.FindAction("MouseDrag", throwIfNotFound: true);
         m_Camera_Scroll = m_Camera.FindAction("Scroll", throwIfNotFound: true);
+        // Building
+        m_Building = asset.FindActionMap("Building", throwIfNotFound: true);
+        m_Building_Build = m_Building.FindAction("Build", throwIfNotFound: true);
+        m_Building_Destroy = m_Building.FindAction("Destroy", throwIfNotFound: true);
+        m_Building_BuildingSelection = m_Building.FindAction("BuildingSelection", throwIfNotFound: true);
+        m_Building_Cancel = m_Building.FindAction("Cancel", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -375,6 +480,76 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         }
     }
     public CameraActions @Camera => new CameraActions(this);
+
+    // Building
+    private readonly InputActionMap m_Building;
+    private List<IBuildingActions> m_BuildingActionsCallbackInterfaces = new List<IBuildingActions>();
+    private readonly InputAction m_Building_Build;
+    private readonly InputAction m_Building_Destroy;
+    private readonly InputAction m_Building_BuildingSelection;
+    private readonly InputAction m_Building_Cancel;
+    public struct BuildingActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public BuildingActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Build => m_Wrapper.m_Building_Build;
+        public InputAction @Destroy => m_Wrapper.m_Building_Destroy;
+        public InputAction @BuildingSelection => m_Wrapper.m_Building_BuildingSelection;
+        public InputAction @Cancel => m_Wrapper.m_Building_Cancel;
+        public InputActionMap Get() { return m_Wrapper.m_Building; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(BuildingActions set) { return set.Get(); }
+        public void AddCallbacks(IBuildingActions instance)
+        {
+            if (instance == null || m_Wrapper.m_BuildingActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_BuildingActionsCallbackInterfaces.Add(instance);
+            @Build.started += instance.OnBuild;
+            @Build.performed += instance.OnBuild;
+            @Build.canceled += instance.OnBuild;
+            @Destroy.started += instance.OnDestroy;
+            @Destroy.performed += instance.OnDestroy;
+            @Destroy.canceled += instance.OnDestroy;
+            @BuildingSelection.started += instance.OnBuildingSelection;
+            @BuildingSelection.performed += instance.OnBuildingSelection;
+            @BuildingSelection.canceled += instance.OnBuildingSelection;
+            @Cancel.started += instance.OnCancel;
+            @Cancel.performed += instance.OnCancel;
+            @Cancel.canceled += instance.OnCancel;
+        }
+
+        private void UnregisterCallbacks(IBuildingActions instance)
+        {
+            @Build.started -= instance.OnBuild;
+            @Build.performed -= instance.OnBuild;
+            @Build.canceled -= instance.OnBuild;
+            @Destroy.started -= instance.OnDestroy;
+            @Destroy.performed -= instance.OnDestroy;
+            @Destroy.canceled -= instance.OnDestroy;
+            @BuildingSelection.started -= instance.OnBuildingSelection;
+            @BuildingSelection.performed -= instance.OnBuildingSelection;
+            @BuildingSelection.canceled -= instance.OnBuildingSelection;
+            @Cancel.started -= instance.OnCancel;
+            @Cancel.performed -= instance.OnCancel;
+            @Cancel.canceled -= instance.OnCancel;
+        }
+
+        public void RemoveCallbacks(IBuildingActions instance)
+        {
+            if (m_Wrapper.m_BuildingActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IBuildingActions instance)
+        {
+            foreach (var item in m_Wrapper.m_BuildingActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_BuildingActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public BuildingActions @Building => new BuildingActions(this);
     public interface ICameraActions
     {
         void OnMovement(InputAction.CallbackContext context);
@@ -382,5 +557,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnPosition(InputAction.CallbackContext context);
         void OnMouseDrag(InputAction.CallbackContext context);
         void OnScroll(InputAction.CallbackContext context);
+    }
+    public interface IBuildingActions
+    {
+        void OnBuild(InputAction.CallbackContext context);
+        void OnDestroy(InputAction.CallbackContext context);
+        void OnBuildingSelection(InputAction.CallbackContext context);
+        void OnCancel(InputAction.CallbackContext context);
     }
 }

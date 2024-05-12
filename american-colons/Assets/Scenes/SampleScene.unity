@@ -532,7 +532,7 @@ GameObject:
   - component: {fileID: 487723999}
   - component: {fileID: 487723998}
   m_Layer: 0
-  m_Name: Plane
+  m_Name: GridVisualisation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -618,12 +618,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 487723997}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.15, z: 0}
   m_LocalScale: {x: 10, y: 1, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1779608437}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &832575517
 GameObject:
@@ -960,6 +960,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 922713890}
+  - {fileID: 487724001}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1779608438
@@ -976,10 +977,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grid: {fileID: 922713891}
   cameraSystem: {fileID: 2110294228}
+  gameInputSystem: {fileID: 1118187122}
   mask:
     serializedVersion: 2
     m_Bits: 128
-  drawGrid: 1
+  buildingDatabase: {fileID: 11400000, guid: 949e137d7eb5ef644a2e8bd8e0d41f60, type: 2}
+  gridVisualisation: {fileID: 487723997}
 --- !u!1 &2110294226
 GameObject:
   m_ObjectHideFlags: 0
@@ -1046,4 +1049,3 @@ SceneRoots:
   - {fileID: 1118187123}
   - {fileID: 1779608437}
   - {fileID: 311316230}
-  - {fileID: 487724001}
