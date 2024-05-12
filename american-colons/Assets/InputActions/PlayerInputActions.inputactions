@@ -24,7 +24,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "ScrollEdge",
+                    "name": "Position",
                     "type": "Value",
                     "id": "0e84b2a9-3635-44b7-8932-1b11fdac7b20",
                     "expectedControlType": "Vector2",
@@ -147,7 +147,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ScrollEdge",
+                    "action": "Position",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
