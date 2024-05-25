@@ -1033,7 +1033,7 @@ MonoBehaviour:
   rotationSpeed: 80
   zoomSpeed: 20
   edgeScrollSize: 20
-  fieldOfViewMax: 20
+  fieldOfViewMax: 55
   fieldOfViewMin: 5
   useEdgeScrool: 0
   useDragPan: 0
