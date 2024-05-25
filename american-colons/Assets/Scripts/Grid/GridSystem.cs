@@ -4,22 +4,47 @@ using UnityEngine;
 
 public class GridSystem : MonoBehaviour
 {
+    // grid class of the unity system.
+    // allows us to use 
     [SerializeField] private Grid grid;
+    // the camera system is used to calculate the grid
+    // world position
     [SerializeField] private CameraSystem cameraSystem;
     [SerializeField] private GameInputSystem gameInputSystem;
+    // mask onto which we apply the ray cast from the camera
+    // system to get the grid world position
     [SerializeField] private LayerMask mask;
 
+    // buildings template database
     [SerializeField] private BuildingDatabaseSO buildingDatabase;
-    private int selectedBuildingIndex = -1;
+    // current building template under construction
+    private BuildingData buildingData;
 
     [SerializeField] private GameObject gridVisualisation;
 
-    private bool drawCellIndicator;
+    // buildings factory is in charge of building a building
+    // this will use internal recipe to construct the building
+    // step by step
+    [SerializeField] private BuildingsFactory buildingsFactory;
+
+    // grid data contains a dictionary of all the occupied positions
+    // and is therefore used to check if an object can be built
+    private GridData gridData;
+
+    // the preview system is used to show the preview object on the screen
+    // before building it
+    [SerializeField] private PreviewSystem previewSystem;
+
+    // lastDetectedPosition keeps in cache the last grid position
+    // in order to optimize the call in the update methods
+    private Vector3Int lastDetectedPosition = Vector3Int.zero;
 
     // Start is called before the first frame update
     private void Start()
     {
         StopPlacement();
+        gridData = new GridData();
+
         gameInputSystem.OnStartBuilding += GameInputSystem_OnStartBuilding;
         gameInputSystem.OnDestroy += GameInputSystem_OnDestroy;
     }
@@ -27,14 +52,26 @@ public class GridSystem : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        DrawCellIndicator();
+        if (buildingData == null)
+            return;
+
+        Vector3Int gridPosition = GetGridCellWorldPosition();
+        if (gridPosition == lastDetectedPosition)
+            return;
+
+        lastDetectedPosition = gridPosition;
+
+        bool isPlacementValid = IsPlacementValid(gridPosition);
+
+        previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), isPlacementValid); 
     }
 
     private void StopPlacement()
     {
-        selectedBuildingIndex = -1;
+        buildingData = null;
         gridVisualisation.SetActive(false);
-        drawCellIndicator = false;
+        previewSystem.StopPlacementPreview();
+        lastDetectedPosition = Vector3Int.zero;
         gameInputSystem.OnBuild -= GameInputSystem_OnBuild;
         gameInputSystem.OnCancelBuilding -= GameInputSystem_OnCancelBuilding;
     }
@@ -42,14 +79,15 @@ public class GridSystem : MonoBehaviour
     private void GameInputSystem_OnStartBuilding(object sender, GameInputSystem.OnStartBuildingEventArgs e)
     {
         StopPlacement();
-        selectedBuildingIndex = buildingDatabase.Buildings.FindIndex(b => b.ID == e.selectedBuilding);
+        int selectedBuildingIndex = buildingDatabase.Buildings.FindIndex(b => b.ID == e.selectedBuilding);
         if (selectedBuildingIndex < 0 || selectedBuildingIndex >= buildingDatabase.Buildings.Count)
         {
             Debug.LogError($"No ID found {e.selectedBuilding}");
             return;
         }
+        buildingData = buildingDatabase.Buildings[selectedBuildingIndex];
         gridVisualisation.SetActive(true);
-        drawCellIndicator = true;
+        previewSystem.StartPlacementPreview(buildingData.Preview, buildingData.Size);
         gameInputSystem.OnBuild += GameInputSystem_OnBuild;
         gameInputSystem.OnCancelBuilding += GameInputSystem_OnCancelBuilding;
     }
@@ -62,10 +100,16 @@ public class GridSystem : MonoBehaviour
     private void GameInputSystem_OnBuild(object sender, System.EventArgs e)
     {
         Vector3Int gridPosition = GetGridCellWorldPosition();
-        GameObject newBuilding = Instantiate(buildingDatabase.Buildings[selectedBuildingIndex].Prefab);
-        newBuilding.transform.position = grid.CellToWorld(gridPosition);
 
-        StopPlacement();
+        if (!IsPlacementValid(gridPosition))
+            return;
+
+        Vector3 position = grid.CellToWorld(gridPosition);
+        int idx = buildingsFactory.Build(buildingData.Building, position);
+
+        gridData.AddObjectAt(gridPosition, buildingData.Size, buildingData.ID, idx);
+
+        previewSystem.UpdatePosition(position, false);
     }
 
     private void GameInputSystem_OnDestroy(object sender, System.EventArgs e)
@@ -82,20 +126,8 @@ public class GridSystem : MonoBehaviour
         return gridPosition;
     }
 
-    private void DrawCellIndicator()
+    private bool IsPlacementValid(Vector3Int gridPosition)
     {
-        if (!drawCellIndicator)
-            return;
-
-        Vector3 topLeftCorner = GetGridCellWorldPosition();
-        topLeftCorner.y = 0.1f;
-        Vector3 topRightCorner = new Vector3(topLeftCorner.x+1, topLeftCorner.y, topLeftCorner.z);
-        Vector3 bottomRightCorner = new Vector3(topLeftCorner.x + 1, topLeftCorner.y, topLeftCorner.z + 1);
-        Vector3 bottomLeftCorner = new Vector3(topLeftCorner.x, topLeftCorner.y, topLeftCorner.z + 1);
-
-        Debug.DrawLine(topLeftCorner, topRightCorner, Color.white);
-        Debug.DrawLine(topLeftCorner, bottomLeftCorner, Color.white);
-        Debug.DrawLine(topRightCorner, bottomRightCorner, Color.white);
-        Debug.DrawLine(bottomLeftCorner, bottomRightCorner, Color.white);
+        return gridData.CanPlaceObjectAt(gridPosition, buildingData.Size);
     }
 }
