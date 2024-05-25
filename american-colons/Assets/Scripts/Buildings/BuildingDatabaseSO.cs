@@ -22,5 +22,8 @@ public class BuildingData
     public Vector2Int Size { get; private set; } = Vector2Int.one;
 
     [field: SerializeField] 
-    public GameObject Prefab { get; private set; }
+    public GameObject Preview { get; private set; }
+
+    [field: SerializeField]
+    public GameObject Building { get; private set;}
 }
