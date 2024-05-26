@@ -235,7 +235,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             ""id"": ""b87b9e2c-db2b-41a7-ae1d-5bba10c924f5"",
             ""actions"": [
                 {
-                    ""name"": ""Build"",
+                    ""name"": ""Build/Destroy"",
                     ""type"": ""Button"",
                     ""id"": ""fceabfcc-6e56-4f8e-bf33-aeaee73fa490"",
                     ""expectedControlType"": ""Button"",
@@ -244,7 +244,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Destroy"",
+                    ""name"": ""Cancel"",
                     ""type"": ""Button"",
                     ""id"": ""da257640-4e1d-470a-80f4-5696e4dd7438"",
                     ""expectedControlType"": ""Button"",
@@ -253,7 +253,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""BuildingSelection"",
+                    ""name"": ""StartBuilding"",
                     ""type"": ""Button"",
                     ""id"": ""35439215-72f9-44b0-8b31-4d763bd28f3a"",
                     ""expectedControlType"": ""Button"",
@@ -262,9 +262,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Cancel"",
+                    ""name"": ""StartDestruction"",
                     ""type"": ""Button"",
-                    ""id"": ""d2196f18-054f-4c71-87d8-e6be776277d1"",
+                    ""id"": ""140402b0-0182-42c2-9303-12af846c45d1"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -279,7 +279,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Build"",
+                    ""action"": ""Build/Destroy"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -290,7 +290,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Destroy"",
+                    ""action"": ""Cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -301,7 +301,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": ""Scale(factor=0)"",
                     ""groups"": """",
-                    ""action"": ""BuildingSelection"",
+                    ""action"": ""StartBuilding"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -312,18 +312,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": ""Scale"",
                     ""groups"": """",
-                    ""action"": ""BuildingSelection"",
+                    ""action"": ""StartBuilding"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""b815c13a-e845-4833-b178-419aaabad036"",
-                    ""path"": ""<Keyboard>/escape"",
+                    ""id"": ""5f6722ac-dca3-4a91-a0fe-82e63b3cfdac"",
+                    ""path"": ""<Keyboard>/minus"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Cancel"",
+                    ""action"": ""StartDestruction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -341,10 +341,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Camera_Scroll = m_Camera.FindAction("Scroll", throwIfNotFound: true);
         // Building
         m_Building = asset.FindActionMap("Building", throwIfNotFound: true);
-        m_Building_Build = m_Building.FindAction("Build", throwIfNotFound: true);
-        m_Building_Destroy = m_Building.FindAction("Destroy", throwIfNotFound: true);
-        m_Building_BuildingSelection = m_Building.FindAction("BuildingSelection", throwIfNotFound: true);
+        m_Building_BuildDestroy = m_Building.FindAction("Build/Destroy", throwIfNotFound: true);
         m_Building_Cancel = m_Building.FindAction("Cancel", throwIfNotFound: true);
+        m_Building_StartBuilding = m_Building.FindAction("StartBuilding", throwIfNotFound: true);
+        m_Building_StartDestruction = m_Building.FindAction("StartDestruction", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -484,18 +484,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     // Building
     private readonly InputActionMap m_Building;
     private List<IBuildingActions> m_BuildingActionsCallbackInterfaces = new List<IBuildingActions>();
-    private readonly InputAction m_Building_Build;
-    private readonly InputAction m_Building_Destroy;
-    private readonly InputAction m_Building_BuildingSelection;
+    private readonly InputAction m_Building_BuildDestroy;
     private readonly InputAction m_Building_Cancel;
+    private readonly InputAction m_Building_StartBuilding;
+    private readonly InputAction m_Building_StartDestruction;
     public struct BuildingActions
     {
         private @PlayerInputActions m_Wrapper;
         public BuildingActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Build => m_Wrapper.m_Building_Build;
-        public InputAction @Destroy => m_Wrapper.m_Building_Destroy;
-        public InputAction @BuildingSelection => m_Wrapper.m_Building_BuildingSelection;
+        public InputAction @BuildDestroy => m_Wrapper.m_Building_BuildDestroy;
         public InputAction @Cancel => m_Wrapper.m_Building_Cancel;
+        public InputAction @StartBuilding => m_Wrapper.m_Building_StartBuilding;
+        public InputAction @StartDestruction => m_Wrapper.m_Building_StartDestruction;
         public InputActionMap Get() { return m_Wrapper.m_Building; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -505,34 +505,34 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_BuildingActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_BuildingActionsCallbackInterfaces.Add(instance);
-            @Build.started += instance.OnBuild;
-            @Build.performed += instance.OnBuild;
-            @Build.canceled += instance.OnBuild;
-            @Destroy.started += instance.OnDestroy;
-            @Destroy.performed += instance.OnDestroy;
-            @Destroy.canceled += instance.OnDestroy;
-            @BuildingSelection.started += instance.OnBuildingSelection;
-            @BuildingSelection.performed += instance.OnBuildingSelection;
-            @BuildingSelection.canceled += instance.OnBuildingSelection;
+            @BuildDestroy.started += instance.OnBuildDestroy;
+            @BuildDestroy.performed += instance.OnBuildDestroy;
+            @BuildDestroy.canceled += instance.OnBuildDestroy;
             @Cancel.started += instance.OnCancel;
             @Cancel.performed += instance.OnCancel;
             @Cancel.canceled += instance.OnCancel;
+            @StartBuilding.started += instance.OnStartBuilding;
+            @StartBuilding.performed += instance.OnStartBuilding;
+            @StartBuilding.canceled += instance.OnStartBuilding;
+            @StartDestruction.started += instance.OnStartDestruction;
+            @StartDestruction.performed += instance.OnStartDestruction;
+            @StartDestruction.canceled += instance.OnStartDestruction;
         }
 
         private void UnregisterCallbacks(IBuildingActions instance)
         {
-            @Build.started -= instance.OnBuild;
-            @Build.performed -= instance.OnBuild;
-            @Build.canceled -= instance.OnBuild;
-            @Destroy.started -= instance.OnDestroy;
-            @Destroy.performed -= instance.OnDestroy;
-            @Destroy.canceled -= instance.OnDestroy;
-            @BuildingSelection.started -= instance.OnBuildingSelection;
-            @BuildingSelection.performed -= instance.OnBuildingSelection;
-            @BuildingSelection.canceled -= instance.OnBuildingSelection;
+            @BuildDestroy.started -= instance.OnBuildDestroy;
+            @BuildDestroy.performed -= instance.OnBuildDestroy;
+            @BuildDestroy.canceled -= instance.OnBuildDestroy;
             @Cancel.started -= instance.OnCancel;
             @Cancel.performed -= instance.OnCancel;
             @Cancel.canceled -= instance.OnCancel;
+            @StartBuilding.started -= instance.OnStartBuilding;
+            @StartBuilding.performed -= instance.OnStartBuilding;
+            @StartBuilding.canceled -= instance.OnStartBuilding;
+            @StartDestruction.started -= instance.OnStartDestruction;
+            @StartDestruction.performed -= instance.OnStartDestruction;
+            @StartDestruction.canceled -= instance.OnStartDestruction;
         }
 
         public void RemoveCallbacks(IBuildingActions instance)
@@ -560,9 +560,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     }
     public interface IBuildingActions
     {
-        void OnBuild(InputAction.CallbackContext context);
-        void OnDestroy(InputAction.CallbackContext context);
-        void OnBuildingSelection(InputAction.CallbackContext context);
+        void OnBuildDestroy(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
+        void OnStartBuilding(InputAction.CallbackContext context);
+        void OnStartDestruction(InputAction.CallbackContext context);
     }
 }

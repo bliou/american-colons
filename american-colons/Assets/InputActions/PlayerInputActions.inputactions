@@ -213,7 +213,7 @@
             "id": "b87b9e2c-db2b-41a7-ae1d-5bba10c924f5",
             "actions": [
                 {
-                    "name": "Build",
+                    "name": "Build/Destroy",
                     "type": "Button",
                     "id": "fceabfcc-6e56-4f8e-bf33-aeaee73fa490",
                     "expectedControlType": "Button",
@@ -222,7 +222,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Destroy",
+                    "name": "Cancel",
                     "type": "Button",
                     "id": "da257640-4e1d-470a-80f4-5696e4dd7438",
                     "expectedControlType": "Button",
@@ -231,7 +231,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "BuildingSelection",
+                    "name": "StartBuilding",
                     "type": "Button",
                     "id": "35439215-72f9-44b0-8b31-4d763bd28f3a",
                     "expectedControlType": "Button",
@@ -240,9 +240,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Cancel",
+                    "name": "StartDestruction",
                     "type": "Button",
-                    "id": "d2196f18-054f-4c71-87d8-e6be776277d1",
+                    "id": "140402b0-0182-42c2-9303-12af846c45d1",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -257,7 +257,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Build",
+                    "action": "Build/Destroy",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -268,7 +268,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Destroy",
+                    "action": "Cancel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -279,7 +279,7 @@
                     "interactions": "",
                     "processors": "Scale(factor=0)",
                     "groups": "",
-                    "action": "BuildingSelection",
+                    "action": "StartBuilding",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -290,18 +290,18 @@
                     "interactions": "",
                     "processors": "Scale",
                     "groups": "",
-                    "action": "BuildingSelection",
+                    "action": "StartBuilding",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "b815c13a-e845-4833-b178-419aaabad036",
-                    "path": "<Keyboard>/escape",
+                    "id": "5f6722ac-dca3-4a91-a0fe-82e63b3cfdac",
+                    "path": "<Keyboard>/minus",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Cancel",
+                    "action": "StartDestruction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

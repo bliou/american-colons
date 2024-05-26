@@ -29,7 +29,7 @@ public class ConstructionSystem : MonoBehaviour
         StopPlacement();
 
         gameInputSystem.OnStartBuilding += GameInputSystem_OnStartBuilding;
-        gameInputSystem.OnDestroy += GameInputSystem_OnDestroy;
+        gameInputSystem.OnStartDestruction += GameInputSystem_OnDestroy;
     }
 
     private void Update()
@@ -44,7 +44,7 @@ public class ConstructionSystem : MonoBehaviour
     private void StopPlacement()
     {
         gameInputSystem.OnBuild -= GameInputSystem_OnBuild;
-        gameInputSystem.OnCancelBuilding -= GameInputSystem_OnCancelBuilding;
+        gameInputSystem.OnCancel -= GameInputSystem_OnCancelBuilding;
     
         if (constructState != null)
             constructState.EndState();
@@ -57,7 +57,7 @@ public class ConstructionSystem : MonoBehaviour
 
         // add the temporary binding to actually place or cancel the building
         gameInputSystem.OnBuild += GameInputSystem_OnBuild;
-        gameInputSystem.OnCancelBuilding += GameInputSystem_OnCancelBuilding;
+        gameInputSystem.OnCancel += GameInputSystem_OnCancelBuilding;
 
         constructState = new PlaceState(
             gridSystem, 

@@ -4,9 +4,9 @@ using UnityEngine;
 public class GameInputSystem : MonoBehaviour
 {
     public event EventHandler<OnStartBuildingEventArgs> OnStartBuilding;
-    public event EventHandler OnCancelBuilding;
+    public event EventHandler OnCancel;
     public event EventHandler OnBuild;
-    public event EventHandler OnDestroy;
+    public event EventHandler OnStartDestruction;
 
     public class OnStartBuildingEventArgs : EventArgs {
         public int selectedBuilding;
@@ -18,10 +18,10 @@ public class GameInputSystem : MonoBehaviour
     private void Awake() 
     {
         playerInputActions = new PlayerInputActions();
-        playerInputActions.Building.BuildingSelection.performed += BuildingSelection_performed;
+        playerInputActions.Building.StartBuilding.performed += StartBuilding_performed;
         playerInputActions.Building.Cancel.performed += Cancel_performed;
-        playerInputActions.Building.Build.performed += Build_performed;
-        playerInputActions.Building.Destroy.performed += Destroy_performed;
+        playerInputActions.Building.BuildDestroy.performed += BuildDestroy_performed;
+        playerInputActions.Building.StartDestruction.performed += StartDestruction_performed;
 
 
         playerInputActions.Camera.Enable();
@@ -30,24 +30,24 @@ public class GameInputSystem : MonoBehaviour
 
     private void Cancel_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        OnCancelBuilding?.Invoke(this, EventArgs.Empty);
+        OnCancel?.Invoke(this, EventArgs.Empty);
     }
 
-    private void BuildingSelection_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void StartBuilding_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         OnStartBuilding?.Invoke(this, new OnStartBuildingEventArgs { 
             selectedBuilding = (int)obj.ReadValue<float>()
         });
     }
 
-    private void Build_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void BuildDestroy_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         OnBuild?.Invoke(this, EventArgs.Empty);
     }
 
-    private void Destroy_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    private void StartDestruction_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        OnDestroy?.Invoke(this, EventArgs.Empty);
+        OnStartDestruction?.Invoke(this, EventArgs.Empty);
     }
 
     public Vector2 GetMovementVectorNormalized() 
