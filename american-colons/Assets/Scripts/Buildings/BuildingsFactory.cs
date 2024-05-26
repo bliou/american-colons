@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BuildingsFactory : MonoBehaviour
 {
+    [SerializeField]
     private List<GameObject> buildings = new();
 
     public int Build(GameObject prefab, Vector3 position)
