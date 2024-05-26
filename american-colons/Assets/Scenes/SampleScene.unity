@@ -321,7 +321,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1358383815}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
@@ -494,7 +494,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1358383815}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!114 &410087042
 MonoBehaviour:
@@ -654,6 +654,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b53c484f6d4cee488b1ac881006fc44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buildings: []
 --- !u!4 &532256618
 Transform:
   m_ObjectHideFlags: 0
@@ -711,12 +712,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 832575517}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1358383815}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &833557367
 GameObject:
@@ -788,7 +789,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1192714298}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1358383815}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &922713889
 GameObject:
@@ -887,8 +888,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1188354806}
+  - component: {fileID: 1188354807}
   m_Layer: 0
-  m_Name: BuildingsSystem
+  m_Name: ConstructionSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -909,9 +911,25 @@ Transform:
   m_Children:
   - {fileID: 532256618}
   - {fileID: 1882294204}
-  - {fileID: 1779608437}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1188354807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1188354805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa96af72342ea8f4b94110e5337c6133, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameInputSystem: {fileID: 1118187122}
+  buildingDatabase: {fileID: 11400000, guid: 949e137d7eb5ef644a2e8bd8e0d41f60, type: 2}
+  buildingsFactory: {fileID: 532256617}
+  previewSystem: {fileID: 1882294203}
+  gridSystem: {fileID: 1779608438}
 --- !u!1 &1192714297
 GameObject:
   m_ObjectHideFlags: 3
@@ -1007,6 +1025,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1358383814
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1358383815}
+  m_Layer: 0
+  m_Name: Cameras
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1358383815
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1358383814}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 330585546}
+  - {fileID: 410087041}
+  - {fileID: 832575519}
+  - {fileID: 833557369}
+  - {fileID: 2110294227}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1779608435
 GameObject:
   m_ObjectHideFlags: 0
@@ -1039,7 +1093,7 @@ Transform:
   m_Children:
   - {fileID: 922713890}
   - {fileID: 487724001}
-  m_Father: {fileID: 1188354806}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1779608438
 MonoBehaviour:
@@ -1055,14 +1109,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grid: {fileID: 922713891}
   cameraSystem: {fileID: 2110294228}
-  gameInputSystem: {fileID: 1118187122}
   mask:
     serializedVersion: 2
     m_Bits: 128
-  buildingDatabase: {fileID: 11400000, guid: 949e137d7eb5ef644a2e8bd8e0d41f60, type: 2}
   gridVisualisation: {fileID: 487723997}
-  buildingsFactory: {fileID: 532256617}
-  previewSystem: {fileID: 1882294203}
 --- !u!1 &1882294202
 GameObject:
   m_ObjectHideFlags: 0
@@ -1136,12 +1186,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2110294226}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1358383815}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2110294228
 MonoBehaviour:
@@ -1169,11 +1219,8 @@ MonoBehaviour:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 330585546}
-  - {fileID: 410087041}
-  - {fileID: 832575519}
-  - {fileID: 833557369}
-  - {fileID: 2110294227}
+  - {fileID: 1358383815}
   - {fileID: 1118187123}
   - {fileID: 311316230}
+  - {fileID: 1779608437}
   - {fileID: 1188354806}
