@@ -8,14 +8,14 @@ public class PlaceState : IConstructState
     private GridSystem gridSystem;
     private PreviewSystem previewSystem;
     private BuildingData buildingData;
-    private BuildingsFactory buildingsFactory;
+    private BuildingsSystem buildingsSystem;
 
     public PlaceState(
         GridSystem gridSystem,
         PreviewSystem previewSystem,
         BuildingDatabaseSO buildingDatabase,
         int selectedBuilding,
-        BuildingsFactory buildingsFactory)
+        BuildingsSystem buildingsFactory)
     {
         int selectedBuildingIndex = buildingDatabase.Buildings.FindIndex(b => b.ID == selectedBuilding);
         if (selectedBuildingIndex < 0 || selectedBuildingIndex >= buildingDatabase.Buildings.Count)
@@ -25,7 +25,7 @@ public class PlaceState : IConstructState
         this.buildingData = buildingDatabase.Buildings[selectedBuildingIndex];
         this.gridSystem = gridSystem;
         this.previewSystem = previewSystem;
-        this.buildingsFactory = buildingsFactory;
+        this.buildingsSystem = buildingsFactory;
 
         gridSystem.ShowGridVisualisation();
         previewSystem.StartPlacementPreview(buildingData.Preview, buildingData.Size);
@@ -44,18 +44,18 @@ public class PlaceState : IConstructState
             return;
 
         Vector3 position = gridSystem.CellToWorld(gridPosition);
-        int idx = buildingsFactory.Build(buildingData.Building, position);
+        int idx = buildingsSystem.Build(buildingData.Prefab, position);
 
         gridSystem.GridData.AddObjectAt(gridPosition, buildingData.Size, buildingData.ID, idx);
 
-        previewSystem.UpdatePosition(position, false);
+        previewSystem.UpdatePlacementPosition(position, false);
     }
 
     public void UpdateState(Vector3Int gridPosition)
     {
         bool isPlacementValid = IsPlacementValid(gridPosition);
 
-        previewSystem.UpdatePosition(gridSystem.CellToWorld(gridPosition), isPlacementValid);
+        previewSystem.UpdatePlacementPosition(gridSystem.CellToWorld(gridPosition), isPlacementValid);
     }
 
     private bool IsPlacementValid(Vector3Int gridPosition)

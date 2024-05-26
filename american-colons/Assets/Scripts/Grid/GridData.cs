@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using UnityEngine;
 
 public class GridData
@@ -38,6 +40,8 @@ public class GridData
         return returnVals;
     }
 
+    // CanPlaceObjectAt: returns true if there is no object at the position
+    // offsetted of the size of the object to place
     public bool CanPlaceObjectAt(Vector3Int position, Vector2Int size)
     {
         List<Vector3Int> positionToOccupy = CalculatePositions(position, size);
@@ -48,6 +52,24 @@ public class GridData
         }
 
         return true;
+    }
+
+    // GetObjectIndexAt: returns the object index at the specified grid location
+    // If there is no placedObject, returns -1
+    public int GetObjectIndexAt(Vector3Int gridPosition)
+    {
+        if (placedObjects.ContainsKey(gridPosition))
+            return placedObjects[gridPosition].PlacedObjectIndex;
+
+        return -1;
+    }
+
+    public void RemoveObjectAt(Vector3Int gridPosition)
+    {
+        foreach (var pos in placedObjects[gridPosition].occupiedPositions)
+        {
+            placedObjects.Remove(pos);
+        }
     }
 }
 

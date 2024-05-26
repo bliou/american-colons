@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PreviewSystem : MonoBehaviour
@@ -10,8 +11,12 @@ public class PreviewSystem : MonoBehaviour
     [SerializeField]
     private bool showCellIndicator = false;
 
+    // for placement
     private GameObject previewObject;
     private Vector2Int previewSize;
+
+    // for removal
+    private Building selectedBuilding;
 
     [SerializeField]
     private Material previewMaterialPrefab;
@@ -27,7 +32,7 @@ public class PreviewSystem : MonoBehaviour
         Destroy(previewObject);
     }
 
-    public void UpdatePosition(Vector3 position, bool isPlacementValid)
+    public void UpdatePlacementPosition(Vector3 position, bool isPlacementValid)
     {
         Color c = isPlacementValid ? Color.green : Color.red;
         c.a = 0.5f;
@@ -35,7 +40,30 @@ public class PreviewSystem : MonoBehaviour
         previewObject.transform.position = new Vector3(position.x, position.y + previewYOffset, position.z);
 
         DrawCellIndicator(position, isPlacementValid);
+    }
 
+    public void HighlightPlacedObject(Building placedObject)
+    {
+        if (placedObject == null)
+        {
+            if (selectedBuilding != null)
+                selectedBuilding.HideSelected();
+
+            selectedBuilding = null;
+            return;
+        }
+        if (selectedBuilding == null)
+        {
+            selectedBuilding = placedObject;
+            selectedBuilding.ShowSelected();
+            return;
+        }
+        if (selectedBuilding.UniqueId != placedObject.UniqueId)
+        {
+            selectedBuilding.HideSelected();
+            selectedBuilding = placedObject;
+            selectedBuilding.ShowSelected();
+        }
     }
 
     private void DrawCellIndicator(Vector3 position, bool isPlacementValid)

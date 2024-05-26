@@ -5,7 +5,7 @@ public class GameInputSystem : MonoBehaviour
 {
     public event EventHandler<OnStartBuildingEventArgs> OnStartBuilding;
     public event EventHandler OnCancel;
-    public event EventHandler OnBuild;
+    public event EventHandler OnBuildDestroy;
     public event EventHandler OnStartDestruction;
 
     public class OnStartBuildingEventArgs : EventArgs {
@@ -42,7 +42,7 @@ public class GameInputSystem : MonoBehaviour
 
     private void BuildDestroy_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        OnBuild?.Invoke(this, EventArgs.Empty);
+        OnBuildDestroy?.Invoke(this, EventArgs.Empty);
     }
 
     private void StartDestruction_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
