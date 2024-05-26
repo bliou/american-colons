@@ -12,7 +12,7 @@ public class ConstructionSystem : MonoBehaviour
     // buildings factory is in charge of building a building
     // this will use internal recipe to construct the building
     // step by step
-    [SerializeField] private BuildingsFactory buildingsFactory;
+    [SerializeField] private BuildingsSystem buildingsSystem;
 
     // the preview system is used to show the preview object on the screen
     // before building it
@@ -26,10 +26,10 @@ public class ConstructionSystem : MonoBehaviour
 
     private void Start()
     {
-        StopPlacement();
+        Cancel();
 
         gameInputSystem.OnStartBuilding += GameInputSystem_OnStartBuilding;
-        gameInputSystem.OnStartDestruction += GameInputSystem_OnDestroy;
+        gameInputSystem.OnStartDestruction += GameInputSystem_OnStartDestruction;
     }
 
     private void Update()
@@ -41,10 +41,10 @@ public class ConstructionSystem : MonoBehaviour
         constructState.UpdateState(gridPosition);
     }
 
-    private void StopPlacement()
+    private void Cancel()
     {
-        gameInputSystem.OnBuild -= GameInputSystem_OnBuild;
-        gameInputSystem.OnCancel -= GameInputSystem_OnCancelBuilding;
+        gameInputSystem.OnBuildDestroy -= GameInputSystem_OnBuildDestroy;
+        gameInputSystem.OnCancel -= GameInputSystem_OnCancel;
     
         if (constructState != null)
             constructState.EndState();
@@ -53,35 +53,42 @@ public class ConstructionSystem : MonoBehaviour
 
     private void GameInputSystem_OnStartBuilding(object sender, GameInputSystem.OnStartBuildingEventArgs e)
     {
-        StopPlacement();
+        Cancel();
 
         // add the temporary binding to actually place or cancel the building
-        gameInputSystem.OnBuild += GameInputSystem_OnBuild;
-        gameInputSystem.OnCancel += GameInputSystem_OnCancelBuilding;
+        gameInputSystem.OnBuildDestroy += GameInputSystem_OnBuildDestroy;
+        gameInputSystem.OnCancel += GameInputSystem_OnCancel;
 
         constructState = new PlaceState(
             gridSystem, 
             previewSystem, 
             buildingDatabase, 
             e.selectedBuilding,
-            buildingsFactory);
+            buildingsSystem);
     }
 
+    private void GameInputSystem_OnStartDestruction(object sender, System.EventArgs e)
+    {
+        Cancel();
 
-    private void GameInputSystem_OnBuild(object sender, System.EventArgs e)
+        // add the temporary binding to actually place or cancel the building
+        gameInputSystem.OnBuildDestroy += GameInputSystem_OnBuildDestroy;
+        gameInputSystem.OnCancel += GameInputSystem_OnCancel;
+
+        constructState = new RemoveState(
+            gridSystem,
+            previewSystem,
+            buildingsSystem); ;
+    }
+
+    private void GameInputSystem_OnBuildDestroy(object sender, System.EventArgs e)
     {
         Vector3Int gridPosition = gridSystem.GetGridCellWorldPosition();
         constructState.OnAction(gridPosition);
     }
 
-    private void GameInputSystem_OnDestroy(object sender, System.EventArgs e)
+    private void GameInputSystem_OnCancel(object sender, System.EventArgs e)
     {
-        Vector3Int gridPosition = gridSystem.GetGridCellWorldPosition();
-    }
-
-
-    private void GameInputSystem_OnCancelBuilding(object sender, System.EventArgs e)
-    {
-        StopPlacement();
+        Cancel();
     }
 }

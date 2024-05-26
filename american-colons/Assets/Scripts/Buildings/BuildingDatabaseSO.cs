@@ -25,5 +25,5 @@ public class BuildingData
     public GameObject Preview { get; private set; }
 
     [field: SerializeField]
-    public GameObject Building { get; private set;}
+    public GameObject Prefab { get; private set;}
 }
