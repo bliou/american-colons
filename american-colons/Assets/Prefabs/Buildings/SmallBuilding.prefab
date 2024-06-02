@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6850371779687572323}
   - component: {fileID: 4370466132208186815}
   - component: {fileID: 8441837614188704553}
+  - component: {fileID: 2511108052627145911}
   m_Layer: 0
   m_Name: Fondation
   m_TagString: Untagged
@@ -105,6 +106,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2511108052627145911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1583151296920309393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cb0a8a5558eb2748a1e8b67fcbed3c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firstPart: {fileID: 589000915324843161}
+  lastPart: {fileID: 589000915324843161}
+  delayTime: 10
 --- !u!1 &3963691244146808903
 GameObject:
   m_ObjectHideFlags: 0
@@ -117,6 +133,7 @@ GameObject:
   - component: {fileID: 1200113368788876019}
   - component: {fileID: 5890682278921936456}
   - component: {fileID: 2456932238010743880}
+  - component: {fileID: 589000915324843161}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -210,6 +227,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &589000915324843161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3963691244146808903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c971b15416fc88f4595cf4418f4cd032, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isLastPart: 1
+  nextPart: {fileID: 0}
+  constructionTime: 5
 --- !u!1 &5046463000524144139
 GameObject:
   m_ObjectHideFlags: 0
@@ -256,8 +288,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 876b840eda811c74f8495b967d394665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingParts:
-  - {fileID: 3963691244146808903}
   fondation: {fileID: 1583151296920309393}
 --- !u!1 &7392180311293543346
 GameObject:
