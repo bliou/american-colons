@@ -32,6 +32,11 @@ public class PreviewSystem : MonoBehaviour
         Destroy(previewObject);
     }
 
+    public void RotatePreview(float angle)
+    {
+        previewObject.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
+    }
+
     public void UpdatePlacementPosition(Vector3 position, bool isPlacementValid)
     {
         Color c = isPlacementValid ? Color.green : Color.red;

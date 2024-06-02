@@ -7,10 +7,11 @@ public class BuildingsSystem : MonoBehaviour
 {
     private List<Building> buildings = new();
 
-    public int Build(GameObject prefab, Vector3 position)
+    public int Build(GameObject prefab, Vector3 position, float angle)
     {
         GameObject gameObject = Instantiate(prefab);
         gameObject.transform.position = position;
+        gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
         Building building  = gameObject.GetComponent<Building>();
         buildings.Add(building);
 

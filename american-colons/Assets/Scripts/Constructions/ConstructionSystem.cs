@@ -34,11 +34,13 @@ public class ConstructionSystem : MonoBehaviour
 
     private void Update()
     {
-        if (constructState == null || gridSystem.IsLastPositionUpdated)
+        float scrollValue = gameInputSystem.GetScrollValue();
+        if (constructState == null || 
+            (!gridSystem.IsLastPositionUpdated && (scrollValue == 0 || gameInputSystem.ControlIsBeingPressed)))
             return;
 
         Vector3Int gridPosition = gridSystem.GetGridCellWorldPosition();
-        constructState.UpdateState(gridPosition);
+        constructState.UpdateState(gridPosition, scrollValue);
     }
 
     private void Cancel()
@@ -50,14 +52,14 @@ public class ConstructionSystem : MonoBehaviour
             constructState.EndState();
         constructState = null;
 
-        GameSystem.Instance.SetState(GameSystem.GameState.Idle);
+        GameSystem.Instance.SetState(GameState.Idle);
     }
 
     private void GameInputSystem_OnStartBuilding(object sender, GameInputSystem.OnStartBuildingEventArgs e)
     {
         Cancel();
 
-        GameSystem.Instance.SetState(GameSystem.GameState.Building);
+        GameSystem.Instance.SetState(GameState.Building);
 
         // add the temporary binding to actually place or cancel the building
         gameInputSystem.OnBuildDestroy += GameInputSystem_OnBuildDestroy;
@@ -69,13 +71,17 @@ public class ConstructionSystem : MonoBehaviour
             buildingDatabase, 
             e.selectedBuilding,
             buildingsSystem);
+
+
+        Vector3Int gridPosition = gridSystem.GetGridCellWorldPosition();
+        constructState.UpdateState(gridPosition, 0f);
     }
 
     private void GameInputSystem_OnStartDestruction(object sender, System.EventArgs e)
     {
         Cancel();
 
-        GameSystem.Instance.SetState(GameSystem.GameState.Building);
+        GameSystem.Instance.SetState(GameState.Building);
 
         // add the temporary binding to actually place or cancel the building
         gameInputSystem.OnBuildDestroy += GameInputSystem_OnBuildDestroy;
@@ -84,7 +90,7 @@ public class ConstructionSystem : MonoBehaviour
         constructState = new RemoveState(
             gridSystem,
             previewSystem,
-            buildingsSystem); ;
+            buildingsSystem);
     }
 
     private void GameInputSystem_OnBuildDestroy(object sender, System.EventArgs e)

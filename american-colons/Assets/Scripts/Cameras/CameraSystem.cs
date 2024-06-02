@@ -111,9 +111,9 @@ public class CameraSystem : MonoBehaviour
 
     private bool CanPerformZoom()
     {
-        GameSystem.GameState state = GameSystem.Instance.State;
+        GameState state = GameSystem.Instance.State;
 
-        return state == GameSystem.GameState.Idle ||
-            (state == GameSystem.GameState.Building && gameInputSystem.ControlIsBeingPressed);
+        return state == GameState.Idle ||
+            (state == GameState.Building && gameInputSystem.ControlIsBeingPressed);
     }
 }
