@@ -926,7 +926,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameInputSystem: {fileID: 1118187122}
   buildingDatabase: {fileID: 11400000, guid: 949e137d7eb5ef644a2e8bd8e0d41f60, type: 2}
-  buildingsSystem: {fileID: 0}
+  buildingsSystem: {fileID: 532256619}
   previewSystem: {fileID: 1882294203}
   gridSystem: {fileID: 1779608438}
 --- !u!1 &1192714297

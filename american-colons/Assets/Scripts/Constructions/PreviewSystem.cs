@@ -47,7 +47,7 @@ public class PreviewSystem : MonoBehaviour
         if (placedObject == null)
         {
             if (selectedBuilding != null)
-                selectedBuilding.HideSelected();
+                selectedBuilding.HideSelection();
 
             selectedBuilding = null;
             return;
@@ -55,14 +55,14 @@ public class PreviewSystem : MonoBehaviour
         if (selectedBuilding == null)
         {
             selectedBuilding = placedObject;
-            selectedBuilding.ShowSelected();
+            selectedBuilding.ShowSelection();
             return;
         }
         if (selectedBuilding.UniqueId != placedObject.UniqueId)
         {
-            selectedBuilding.HideSelected();
+            selectedBuilding.HideSelection();
             selectedBuilding = placedObject;
-            selectedBuilding.ShowSelected();
+            selectedBuilding.ShowSelection();
         }
     }
 

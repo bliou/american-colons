@@ -15,7 +15,7 @@ public class PlaceState : IConstructState
         PreviewSystem previewSystem,
         BuildingDatabaseSO buildingDatabase,
         int selectedBuilding,
-        BuildingsSystem buildingsFactory)
+        BuildingsSystem buildingsSystem)
     {
         int selectedBuildingIndex = buildingDatabase.Buildings.FindIndex(b => b.ID == selectedBuilding);
         if (selectedBuildingIndex < 0 || selectedBuildingIndex >= buildingDatabase.Buildings.Count)
@@ -25,7 +25,7 @@ public class PlaceState : IConstructState
         this.buildingData = buildingDatabase.Buildings[selectedBuildingIndex];
         this.gridSystem = gridSystem;
         this.previewSystem = previewSystem;
-        this.buildingsSystem = buildingsFactory;
+        this.buildingsSystem = buildingsSystem;
 
         gridSystem.ShowGridVisualisation();
         previewSystem.StartPlacementPreview(buildingData.Preview, buildingData.Size);
