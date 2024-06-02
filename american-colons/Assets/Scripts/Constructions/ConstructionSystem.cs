@@ -49,11 +49,15 @@ public class ConstructionSystem : MonoBehaviour
         if (constructState != null)
             constructState.EndState();
         constructState = null;
+
+        GameSystem.Instance.SetState(GameSystem.GameState.Idle);
     }
 
     private void GameInputSystem_OnStartBuilding(object sender, GameInputSystem.OnStartBuildingEventArgs e)
     {
         Cancel();
+
+        GameSystem.Instance.SetState(GameSystem.GameState.Building);
 
         // add the temporary binding to actually place or cancel the building
         gameInputSystem.OnBuildDestroy += GameInputSystem_OnBuildDestroy;
@@ -70,6 +74,8 @@ public class ConstructionSystem : MonoBehaviour
     private void GameInputSystem_OnStartDestruction(object sender, System.EventArgs e)
     {
         Cancel();
+
+        GameSystem.Instance.SetState(GameSystem.GameState.Building);
 
         // add the temporary binding to actually place or cancel the building
         gameInputSystem.OnBuildDestroy += GameInputSystem_OnBuildDestroy;

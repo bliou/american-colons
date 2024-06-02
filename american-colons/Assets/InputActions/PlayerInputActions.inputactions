@@ -15,6 +15,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "Control",
+                    "type": "Button",
+                    "id": "f3589ddc-34d8-4e5d-94bc-b69d5c940b9d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Rotation",
                     "type": "Value",
                     "id": "64e1d733-61e6-4123-a392-7e3e802f15de",
@@ -205,6 +214,17 @@
                     "action": "Scroll",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "eeca79e7-b589-42bc-a9b7-14f3adeaf847",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Control",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -289,6 +309,17 @@
                     "path": "<Keyboard>/1",
                     "interactions": "",
                     "processors": "Scale",
+                    "groups": "",
+                    "action": "StartBuilding",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "673819a3-890d-46c7-894a-42bfd77cea1e",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "Scale(factor=2)",
                     "groups": "",
                     "action": "StartBuilding",
                     "isComposite": false,

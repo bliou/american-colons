@@ -12,6 +12,7 @@ public class GameInputSystem : MonoBehaviour
         public int selectedBuilding;
     }
 
+    public bool ControlIsBeingPressed { get; private set; }
 
     private PlayerInputActions playerInputActions;
 
@@ -23,9 +24,21 @@ public class GameInputSystem : MonoBehaviour
         playerInputActions.Building.BuildDestroy.performed += BuildDestroy_performed;
         playerInputActions.Building.StartDestruction.performed += StartDestruction_performed;
 
+        playerInputActions.Camera.Control.started += Control_started;
+        playerInputActions.Camera.Control.canceled += Control_canceled;
 
         playerInputActions.Camera.Enable();
         playerInputActions.Building.Enable();
+    }
+
+    private void Control_started(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        ControlIsBeingPressed = true;
+    }
+
+    private void Control_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        ControlIsBeingPressed = false;
     }
 
     private void Cancel_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)

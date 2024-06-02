@@ -93,6 +93,11 @@ public class CameraSystem : MonoBehaviour
 
     private void Zoom()
     {
+        if (!CanPerformZoom())
+        {
+            return;
+        }
+
         float scrollValue = gameInputSystem.GetScrollValue();
         if (scrollValue > 0)
             targetFieldOfView -= 5;
@@ -102,5 +107,13 @@ public class CameraSystem : MonoBehaviour
         targetFieldOfView = Mathf.Clamp(targetFieldOfView, fieldOfViewMin, fieldOfViewMax);
 
         cinemachineCamera.m_Lens.FieldOfView = Mathf.Lerp(cinemachineCamera.m_Lens.FieldOfView, targetFieldOfView, zoomSpeed * Time.deltaTime);
+    }
+
+    private bool CanPerformZoom()
+    {
+        GameSystem.GameState state = GameSystem.Instance.State;
+
+        return state == GameSystem.GameState.Idle ||
+            (state == GameSystem.GameState.Building && gameInputSystem.ControlIsBeingPressed);
     }
 }
