@@ -10,8 +10,8 @@ public class BuildingsSystem : MonoBehaviour
     public int Build(GameObject prefab, Vector3 position)
     {
         GameObject gameObject = Instantiate(prefab);
-        Building building = new Building(gameObject, position);
-
+        gameObject.transform.position = position;
+        Building building  = gameObject.GetComponent<Building>();
         buildings.Add(building);
 
         return buildings.Count-1;
@@ -28,7 +28,7 @@ public class BuildingsSystem : MonoBehaviour
             buildings[idx] == null)
             return;
 
-        Destroy(buildings[idx].GetGameObject());
+        Destroy(buildings[idx]);
         buildings[idx] = null;
     }
 }

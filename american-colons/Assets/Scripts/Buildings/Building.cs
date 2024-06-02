@@ -3,36 +3,43 @@ using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
 
-public class Building
+public class Building : MonoBehaviour
 {
-    // actual game object
-    private GameObject gameObject;
+    // list all the renderers of the child object
+    private MeshRenderer[] childRenderers;
+    private List<Color> childColors = new();
 
-    private SelectedBuilding selectedBuilding;
+    public int UniqueId { get; private set; }
+    private static int uniqueId = 0;
 
-    public int UniqueId {get; private set;}
-    public static int currentUniqueID = 0;
-
-    public Building(GameObject gameObject, Vector3 position)
+    private void Start()
     {
-        this.gameObject = gameObject;
-        this.selectedBuilding = gameObject.GetComponentInChildren<SelectedBuilding>();
-        gameObject.transform.position = position;
-        UniqueId = currentUniqueID++;
+        childRenderers = GetComponentsInChildren<MeshRenderer>();
+        foreach (MeshRenderer renderer in childRenderers)
+        {
+            childColors.Add(renderer.material.color);
+        }
+        UniqueId = uniqueId++;
     }
 
-    public GameObject GetGameObject()
+    private void OnDestroy()
     {
-        return gameObject;
+        Destroy(gameObject);
     }
 
-    public void ShowSelected()
+    public void ShowSelection()
     {
-        selectedBuilding.ShowSelected();
+        foreach (MeshRenderer renderer in childRenderers)
+        {
+            renderer.material.color = Color.black; 
+        }
     }
 
-    public void HideSelected()
+    public void HideSelection()
     {
-        selectedBuilding.HideSelected();
+        for (int i = 0; i < childRenderers.Length; i++)
+        {
+            childRenderers[i].material.color = childColors[i];
+        }
     }
 }
