@@ -13,6 +13,7 @@ public class BuildingsSystem : MonoBehaviour
         gameObject.transform.position = position;
         gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
         Building building  = gameObject.GetComponent<Building>();
+        building.StartConstruction();
         buildings.Add(building);
 
         return buildings.Count-1;
