@@ -38,7 +38,7 @@ public class RemoveState : IConstructState
         buildingsFactory.RemoveAt(placedObjectIdx);
     }
 
-    public void UpdateState(Vector3Int gridPosition)
+    public void UpdateState(Vector3Int gridPosition, float scrollValue)
     {
         Building placedObject = GetPlacedObject(gridPosition);
         previewSystem.HighlightPlacedObject(placedObject);

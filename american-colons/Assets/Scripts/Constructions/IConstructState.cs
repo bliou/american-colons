@@ -6,5 +6,5 @@ public interface IConstructState
 {
     public void EndState();
     public void OnAction(Vector3Int gridPosition);
-    public void UpdateState(Vector3Int gridPosition);
+    public void UpdateState(Vector3Int gridPosition, float scrollValue);
 }

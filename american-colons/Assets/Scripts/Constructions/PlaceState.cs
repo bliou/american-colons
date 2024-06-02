@@ -23,6 +23,7 @@ public class PlaceState : IConstructState
             throw new Exception($"No ID found {selectedBuilding}");
         }
         this.buildingData = buildingDatabase.Buildings[selectedBuildingIndex];
+        this.buildingData.ResetDir();
         this.gridSystem = gridSystem;
         this.previewSystem = previewSystem;
         this.buildingsSystem = buildingsSystem;
@@ -43,23 +44,42 @@ public class PlaceState : IConstructState
         if (!IsPlacementValid(gridPosition))
             return;
 
-        Vector3 position = gridSystem.CellToWorld(gridPosition);
-        int idx = buildingsSystem.Build(buildingData.Prefab, position);
+        Vector3 position = gridSystem.CellToWorld(gridPosition) + buildingData.GetRotationOffset();
+        int idx = buildingsSystem.Build(buildingData.Prefab, position, buildingData.GetRotationAngle());
 
-        gridSystem.GridData.AddObjectAt(gridPosition, buildingData.Size, buildingData.ID, idx);
+        gridSystem.GridData.AddObjectAt(gridPosition, buildingData.GetSize(), buildingData.ID, idx);
 
         previewSystem.UpdatePlacementPosition(position, false);
     }
 
-    public void UpdateState(Vector3Int gridPosition)
+    public void UpdateState(Vector3Int gridPosition, float scrollValue)
     {
+        RotatePreview(scrollValue);
+
         bool isPlacementValid = IsPlacementValid(gridPosition);
 
-        previewSystem.UpdatePlacementPosition(gridSystem.CellToWorld(gridPosition), isPlacementValid);
+        previewSystem.UpdatePlacementPosition(gridSystem.CellToWorld(gridPosition) + buildingData.GetRotationOffset(), isPlacementValid);
     }
 
     private bool IsPlacementValid(Vector3Int gridPosition)
     {
-        return gridSystem.GridData.CanPlaceObjectAt(gridPosition, buildingData.Size);
+        return gridSystem.GridData.CanPlaceObjectAt(gridPosition, buildingData.GetSize());
+    }
+
+    private void RotatePreview(float scrollValue) 
+    {
+        if (scrollValue == 0)
+            return;
+
+        Debug.Log("rotation");
+        if (scrollValue > 0)
+        {
+            buildingData.RotateRight();
+        }
+        else
+        {
+            buildingData.RotateLeft();
+        }
+        previewSystem.RotatePreview(buildingData.GetRotationAngle());
     }
 }

@@ -29,7 +29,7 @@ MonoBehaviour:
       type: 3}
   - <Name>k__BackingField: RectangularBuilding
     <ID>k__BackingField: 2
-    <Size>k__BackingField: {x: 2, y: 5}
+    <Size>k__BackingField: {x: 5, y: 2}
     <Preview>k__BackingField: {fileID: 2668378315538197255, guid: 9d403f1a9b05d944288a4ced44040cff,
       type: 3}
     <Prefab>k__BackingField: {fileID: 2668378315538197255, guid: 4b66554e14019ef46a4cebdbb37ff0aa,
