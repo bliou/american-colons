@@ -10,7 +10,8 @@ public class BuildingPart : MonoBehaviour
     [SerializeField] private bool isLastPart;
     [SerializeField] private BuildingPart nextPart;
     [SerializeField] private float constructionTime;
-
+    [SerializeField] private Material buildingMaterial;
+    
     private bool partBeingBuilt = false;
     private float constructionDuration = 0f;
 
@@ -19,7 +20,7 @@ public class BuildingPart : MonoBehaviour
     private void Start()
     {
         gameObject.SetActive(false);
-        material = GetComponent<Renderer>().material;
+        material = GetComponent<Renderer>().materials[0];
     }
 
     private void Update()
@@ -33,30 +34,18 @@ public class BuildingPart : MonoBehaviour
         if (!partBeingBuilt)
             return;
 
-        Color color = material.color;
 
         // otherwise, wait consruction time before showing it entirely
         constructionDuration += Time.deltaTime;
 
-        if (constructionDuration > constructionTime)
+        if (constructionDuration >= constructionTime)
         {
-            color.a = 1.0f;
-            material.color = color;
-            if (isLastPart)
-            {
-                OnLastPartBuilt?.Invoke(this, EventArgs.Empty);
-                return;
-            }
-
-            nextPart.EnableConstruction();
-            partBeingBuilt = false;
-
+            EndConstruction();
             return;
         }
 
+        Color color = material.color;
         color.a = constructionDuration / constructionTime;
-
-        Debug.Log("color: " + color);
         material.color = color;
     }
 
@@ -64,5 +53,22 @@ public class BuildingPart : MonoBehaviour
     {
         partBeingBuilt = true;
         gameObject.SetActive(true);
+    }
+
+    private void EndConstruction()
+    {
+        Color color = material.color;
+        color.a = 1.0f;
+        material.color = color;
+        if (isLastPart)
+        {
+            OnLastPartBuilt?.Invoke(this, EventArgs.Empty);
+            return;
+        }
+
+        nextPart.EnableConstruction();
+        partBeingBuilt = false;
+
+        return;
     }
 }
