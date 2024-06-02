@@ -9,6 +9,12 @@ public class Building : MonoBehaviour
     private MeshRenderer[] childRenderers;
     private List<Color> childColors = new();
 
+    // the different parts of the building
+    [SerializeField] private GameObject[] buildingParts;
+
+    // the fondation of the building
+    [SerializeField] private GameObject fondation;
+
     public int UniqueId { get; private set; }
     private static int uniqueId = 0;
 
@@ -19,7 +25,27 @@ public class Building : MonoBehaviour
         {
             childColors.Add(renderer.material.color);
         }
+
         UniqueId = uniqueId++;
+    }
+
+    private void Update()
+    {
+        
+    }
+
+    public void StartConstruction()
+    {
+        foreach (GameObject buildingPart in buildingParts)
+        {
+            buildingPart.SetActive(false);
+        }
+        fondation.SetActive(true);
+    }
+
+    private void EndConstruction()
+    {
+        fondation.SetActive(false);
     }
 
     private void OnDestroy()
