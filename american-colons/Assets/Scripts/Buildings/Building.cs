@@ -9,9 +9,6 @@ public class Building : MonoBehaviour
     private MeshRenderer[] childRenderers;
     private List<Color> childColors = new();
 
-    // the different parts of the building
-    [SerializeField] private GameObject[] buildingParts;
-
     // the fondation of the building
     [SerializeField] private GameObject fondation;
 
@@ -36,10 +33,6 @@ public class Building : MonoBehaviour
 
     public void StartConstruction()
     {
-        foreach (GameObject buildingPart in buildingParts)
-        {
-            buildingPart.SetActive(false);
-        }
         fondation.SetActive(true);
     }
 
