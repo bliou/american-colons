@@ -10,6 +10,7 @@ public class GridSystem : MonoBehaviour
     // the camera system is used to calculate the grid
     // world position
     [SerializeField] private CameraSystem cameraSystem;
+    
     // mask onto which we apply the ray cast from the camera
     // system to get the grid world position
     [SerializeField] private LayerMask mask;
@@ -19,6 +20,9 @@ public class GridSystem : MonoBehaviour
     // grid data contains a dictionary of all the occupied positions
     // and is therefore used to check if an object can be built
     public GridData GridData { get; private set; }
+
+    // this represents the terrain
+    private TerrainSystem terrain;
 
     // lastDetectedPosition keeps in cache the last grid position
     // in order to optimize the call in the update methods
@@ -36,6 +40,7 @@ public class GridSystem : MonoBehaviour
     private void Update()
     {
         Vector3Int gridPosition = GetGridCellWorldPosition();
+        DrawCellIndicator(gridPosition);
         if (gridPosition == lastDetectedPosition)
         {
             IsLastPositionUpdated = false;
@@ -44,6 +49,12 @@ public class GridSystem : MonoBehaviour
         IsLastPositionUpdated = true;
         lastDetectedPosition = gridPosition;
     }
+
+    public Vector2 GetGridCellSize()
+    {
+        return new Vector2(grid.cellSize.x, grid.cellSize.z);
+    }
+
     public Vector3Int GetGridCellWorldPosition()
     {
         Vector3 gridWorldPosition = cameraSystem.ScreenPointToRay(mask);
@@ -71,5 +82,14 @@ public class GridSystem : MonoBehaviour
     public void ResetLastDetectedPosition()
     {
         lastDetectedPosition = Vector3Int.zero;
+    }
+
+
+    private void DrawCellIndicator(Vector3 gridPosition)
+    {
+        Debug.DrawLine(new Vector3(gridPosition.x, 0, gridPosition.z), new Vector3(gridPosition.x, 0, gridPosition.z + 1), Color.white);
+        Debug.DrawLine(new Vector3(gridPosition.x + 1, 0, gridPosition.z), new Vector3(gridPosition.x + 1, 0, gridPosition.z + 1), Color.white);
+        Debug.DrawLine(new Vector3(gridPosition.x, 0, gridPosition.z + 1), new Vector3(gridPosition.x + 1, 0, gridPosition.z + 1), Color.white);
+        Debug.DrawLine(new Vector3(gridPosition.x, 0, gridPosition.z), new Vector3(gridPosition.x + 1, 0, gridPosition.z), Color.white);
     }
 }

@@ -39,7 +39,7 @@ public class CameraSystem : MonoBehaviour
         {
             screenPointPosition = hit.point;
         }
-
+        
         return screenPointPosition;
     }
 

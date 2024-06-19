@@ -17,6 +17,7 @@ public class GameSystem : MonoBehaviour
 
     public GameState State { get; private set; }
 
+    [SerializeField] private Vector2Int mapSize;
 
     private void Awake()
     {
@@ -33,6 +34,11 @@ public class GameSystem : MonoBehaviour
     private void Start()
     {
         State = GameState.Idle;
+    }
+
+    public Vector2Int GetMapSize()
+    {
+        return mapSize;
     }
 
     public void SetState(GameState state)

@@ -71,7 +71,6 @@ public class PlaceState : IConstructState
         if (scrollValue == 0)
             return;
 
-        Debug.Log("rotation");
         if (scrollValue > 0)
         {
             buildingData.RotateRight();
