@@ -16,7 +16,7 @@ public class PreviewSystem : MonoBehaviour
     private Vector2Int previewSize;
 
     // for removal
-    private Building selectedBuilding;
+    private PlacedObject highlightPlacedObject;
 
     [SerializeField]
     private Material previewMaterialPrefab;
@@ -47,28 +47,21 @@ public class PreviewSystem : MonoBehaviour
         DrawCellIndicator(position, isPlacementValid);
     }
 
-    public void HighlightPlacedObject(Building placedObject)
+    public void HighlightPlacedObject(PlacedObject placedObject)
     {
         if (placedObject == null)
         {
-            if (selectedBuilding != null)
-                selectedBuilding.HideSelection();
+            if (highlightPlacedObject != null)
+                highlightPlacedObject.StopHighlighting();
 
-            selectedBuilding = null;
+            highlightPlacedObject = null;
             return;
         }
-        if (selectedBuilding == null)
-        {
-            selectedBuilding = placedObject;
-            selectedBuilding.ShowSelection();
-            return;
-        }
-        if (selectedBuilding.UniqueId != placedObject.UniqueId)
-        {
-            selectedBuilding.HideSelection();
-            selectedBuilding = placedObject;
-            selectedBuilding.ShowSelection();
-        }
+        placedObject.Highlight();
+        if (highlightPlacedObject != null && highlightPlacedObject.UniqueId != placedObject.UniqueId)
+            highlightPlacedObject.StopHighlighting();
+
+        highlightPlacedObject = placedObject;
     }
 
     private void DrawCellIndicator(Vector3 position, bool isPlacementValid)

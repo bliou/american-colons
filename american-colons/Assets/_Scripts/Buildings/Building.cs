@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
@@ -12,8 +13,8 @@ public class Building : MonoBehaviour
     // the fondation of the building
     [SerializeField] private GameObject fondation;
 
-    public int UniqueId { get; private set; }
-    private static int uniqueId = 0;
+    // reference to the related placed object
+    private PlacedObject placedObject;
 
     private void Start()
     {
@@ -22,13 +23,18 @@ public class Building : MonoBehaviour
         {
             childColors.Add(renderer.material.color);
         }
-
-        UniqueId = uniqueId++;
     }
 
     private void Update()
     {
         
+    }
+
+    public void SetPlacedObject(PlacedObject placedObject)
+    {
+        this.placedObject = placedObject;
+        this.placedObject.OnHighlight += ShowSelection;
+        this.placedObject.OnStopHighlighting += HideSelection;
     }
 
     public void StartConstruction()
@@ -44,9 +50,11 @@ public class Building : MonoBehaviour
     private void OnDestroy()
     {
         Destroy(gameObject);
+        this.placedObject.OnHighlight -= ShowSelection;
+        this.placedObject.OnStopHighlighting -= HideSelection;
     }
 
-    public void ShowSelection()
+    private void ShowSelection(object sender, EventArgs e)
     {
         foreach (MeshRenderer renderer in childRenderers)
         {
@@ -54,7 +62,7 @@ public class Building : MonoBehaviour
         }
     }
 
-    public void HideSelection()
+    private void HideSelection(object sender, EventArgs e)
     {
         for (int i = 0; i < childRenderers.Length; i++)
         {

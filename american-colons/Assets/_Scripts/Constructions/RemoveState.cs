@@ -22,34 +22,26 @@ public class RemoveState : IConstructState
     {
         gridSystem.ResetLastDetectedPosition();
         previewSystem.StopPlacementPreview();
+        previewSystem.HighlightPlacedObject(null);
     }
 
     public void OnAction(Vector3Int gridPosition)
     {
-        int placedObjectIdx = gridSystem.GridData.GetObjectIndexAt(gridPosition);
+        PlacedObject placedObject = gridSystem.GetPlacedObjectAtGridPosition(gridPosition);
         
         // do nothin if there are no placed object below the mouse
-        if (placedObjectIdx == -1)
+        if (placedObject == null)
             return;
 
         // remove the object both at grid data level and in
         // the buildings factory
-        gridSystem.GridData.RemoveObjectAt(gridPosition);
-        buildingsFactory.RemoveAt(placedObjectIdx);
+        gridSystem.RemoveObjectAt(gridPosition);
+        buildingsFactory.RemoveBuilding(placedObject.UniqueId);
     }
 
     public void UpdateState(Vector3Int gridPosition, float scrollValue)
     {
-        Building placedObject = GetPlacedObject(gridPosition);
+        PlacedObject placedObject = gridSystem.GetPlacedObjectAtGridPosition(gridPosition);
         previewSystem.HighlightPlacedObject(placedObject);
-    }
-
-    private Building GetPlacedObject(Vector3Int gridPosition)
-    {
-        int placedObjectIdx = gridSystem.GridData.GetObjectIndexAt(gridPosition);
-        if (placedObjectIdx == -1)
-            return null;
-
-        return buildingsFactory.GetBuilding(placedObjectIdx);
     }
 }
