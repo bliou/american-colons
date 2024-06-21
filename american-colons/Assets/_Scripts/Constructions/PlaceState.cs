@@ -45,9 +45,9 @@ public class PlaceState : IConstructState
             return;
 
         Vector3 position = gridSystem.CellToWorld(gridPosition) + buildingData.GetRotationOffset();
-        int idx = buildingsSystem.Build(buildingData.Prefab, position, buildingData.GetRotationAngle());
 
-        gridSystem.GridData.AddObjectAt(gridPosition, buildingData.GetSize(), buildingData.ID, idx);
+        PlacedObject placedObject = gridSystem.PlaceObjectAt(gridPosition, buildingData.GetSize());
+        buildingsSystem.Build(buildingData.Prefab, placedObject, position, buildingData.GetRotationAngle());
 
         previewSystem.UpdatePlacementPosition(position, false);
     }
@@ -63,7 +63,7 @@ public class PlaceState : IConstructState
 
     private bool IsPlacementValid(Vector3Int gridPosition)
     {
-        return gridSystem.GridData.CanPlaceObjectAt(gridPosition, buildingData.GetSize());
+        return gridSystem.CanPlaceObjectAt(gridPosition, buildingData.GetSize());
     }
 
     private void RotatePreview(float scrollValue) 
@@ -71,7 +71,6 @@ public class PlaceState : IConstructState
         if (scrollValue == 0)
             return;
 
-        Debug.Log("rotation");
         if (scrollValue > 0)
         {
             buildingData.RotateRight();

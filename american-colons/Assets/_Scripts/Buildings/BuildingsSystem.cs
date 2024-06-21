@@ -5,32 +5,30 @@ using UnityEngine;
 
 public class BuildingsSystem : MonoBehaviour
 {
-    private List<Building> buildings = new();
+    private Dictionary<int, Building> buildings = new();
 
-    public int Build(GameObject prefab, Vector3 position, float angle)
+    public void Build(GameObject prefab, PlacedObject placedObject, Vector3 position, float angle)
     {
         GameObject gameObject = Instantiate(prefab);
         gameObject.transform.position = position;
         gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
         Building building  = gameObject.GetComponent<Building>();
+        building.SetPlacedObject(placedObject);
         building.StartConstruction();
-        buildings.Add(building);
-
-        return buildings.Count-1;
+        buildings.Add(placedObject.UniqueId, building);
     }
 
-    public Building GetBuilding(int idx)
+    public Building GetBuilding(int uniqueId)
     {
-        return buildings[idx];
+        return buildings[uniqueId];
     }
 
-    public void RemoveAt(int idx)
+    public void RemoveBuilding(int uniqueId)
     {
-        if (buildings.Count < idx ||
-            buildings[idx] == null)
+        if (!buildings.ContainsKey(uniqueId))
             return;
 
-        Destroy(buildings[idx]);
-        buildings[idx] = null;
+        Destroy(buildings[uniqueId]);
+        buildings[uniqueId] = null;
     }
 }

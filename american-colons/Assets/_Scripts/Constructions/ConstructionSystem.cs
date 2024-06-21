@@ -91,6 +91,9 @@ public class ConstructionSystem : MonoBehaviour
             gridSystem,
             previewSystem,
             buildingsSystem);
+
+        Vector3Int gridPosition = gridSystem.GetGridCellWorldPosition();
+        constructState.UpdateState(gridPosition, 0f);
     }
 
     private void GameInputSystem_OnBuildDestroy(object sender, System.EventArgs e)

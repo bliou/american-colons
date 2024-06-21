@@ -1,14 +1,25 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GridSystem : MonoBehaviour
 {
     // grid class of the unity system.
-    // allows us to use 
+    // allows us to get the cell from the mouse cursor and
+    // other positions easily
     [SerializeField] private Grid grid;
 
+    // cutomGrid that will hold the useful cells data
+    // compared to the grid above.
+    // this customGrid will help us know if an object can
+    // be placed, or to compute the best path to take
     private Cell[,] customGrid;
+
+    // list of all the placed objects on the grid
+    private List<PlacedObject> placedObjects;
+
+    // a reference to the terrain
+    private Terrain terrain;
 
     // the camera system is used to calculate the grid
     // world position
@@ -19,13 +30,6 @@ public class GridSystem : MonoBehaviour
 
     [SerializeField] private GameObject gridVisualisation;
 
-    // grid data contains a dictionary of all the occupied positions
-    // and is therefore used to check if an object can be built
-    public GridData GridData { get; private set; }
-
-    // a reference to the terrain
-    private Terrain terrain;
-
     // lastDetectedPosition keeps in cache the last grid position
     // in order to optimize the call in the update methods
     private Vector3Int lastDetectedPosition = Vector3Int.zero;
@@ -35,7 +39,7 @@ public class GridSystem : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        GridData = new GridData();
+        placedObjects = new();
         terrain = Terrain.activeTerrain;
 
         int terrainWidth = (int)terrain.terrainData.size.x;
@@ -104,5 +108,80 @@ public class GridSystem : MonoBehaviour
     public void ResetLastDetectedPosition()
     {
         lastDetectedPosition = Vector3Int.zero;
+    }
+
+    public PlacedObject PlaceObjectAt(
+        Vector3Int gridPosition,
+        Vector2Int size)
+    {
+        List<Cell> cellsToOccupy = GetCells(gridPosition, size);
+        PlacedObject placedObject = new PlacedObject(cellsToOccupy, gridPosition, size);
+
+        foreach (var cell in cellsToOccupy)
+        {
+            if (!cell.CanPlaceObject())
+                throw new Exception($"cannot place object on cell: {cell}");
+            cell.AddPlacedObject(placedObject);
+        }
+
+        placedObjects.Add(placedObject);
+        return placedObject;
+    }
+
+    public void RemoveObjectAt(Vector3Int gridPosition)
+    {
+        PlacedObject placedObject = GetPlacedObjectAtGridPosition(gridPosition);
+        if (placedObject == null)
+            throw new Exception($"no placed object on grid");
+
+        placedObject.RemovePlacedObject();
+        placedObjects.Remove(placedObject);
+    }
+
+    public List<Cell> GetCells(Vector3Int position, Vector2Int size)
+    {
+        List<Cell> cells = new();
+        for (int x = 0; x < size.x; x++)
+        {
+            for (int y = 0; y < size.y; y++)
+            {
+                Vector3Int cellPos = position + new Vector3Int(x, 0, y);
+                if (cellPos.x < customGrid.GetLength(0) && cellPos.z < customGrid.GetLength(1))
+                    cells.Add(customGrid[cellPos.x, cellPos.z]);
+            }
+        }
+
+        return cells;
+    }
+
+    public PlacedObject GetPlacedObjectAtGridPosition(Vector3Int gridPosition)
+    {
+        foreach (var placedObject in placedObjects)
+        {
+            if (placedObject.IsGridPositionOnPlacedObject(gridPosition))
+            {
+                return placedObject;
+            }
+        }
+
+        return null;
+    }
+
+    public bool CanPlaceObjectAt(Vector3Int gridPosition, Vector2Int size)
+    {
+        // we can't place an object that overlap with the current terrain
+        if (gridPosition.x < 0 || gridPosition.z < 0 ||
+            gridPosition.x + size.x > customGrid.GetLength(0) ||
+            gridPosition.z + size.y > customGrid.GetLength(1))
+            return false;
+
+        List<Cell> cellsToOccupy = GetCells(gridPosition, size);
+        foreach (var cell in cellsToOccupy)
+        {
+            if (!cell.CanPlaceObject())
+                return false;
+        }
+
+        return true;
     }
 }

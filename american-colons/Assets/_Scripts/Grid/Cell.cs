@@ -1,10 +1,18 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Cell
 {
     private Vector2Int position;
     private float[,,] alphaMaps;
+
+    // if set to true, a placed object can be set on this cell
     private bool isConstructible;
+
+    // current placedObjects on this cell.
+    // a placed object can be on multiple cell and will
+    // therefore hold a reference to all the cells it's attached to
+    private List<PlacedObject> placedObjects;
 
     private const float constructibleRatio = 0.85f;
 
@@ -12,6 +20,7 @@ public class Cell
     {
         this.position = position;
         this.alphaMaps = alphaMaps;
+        this.placedObjects = new();
 
         ComputeIsConstructible();
     }
@@ -19,6 +28,21 @@ public class Cell
     public override string ToString()
     {
         return $"cell [{position.x}; {position.y}] - isConstructible: {isConstructible}";
+    }
+
+    public bool CanPlaceObject()
+    {
+        return isConstructible && placedObjects.Count == 0;
+    }
+
+    public void AddPlacedObject(PlacedObject placedObject)
+    {
+        placedObjects.Add(placedObject);
+    }
+
+    public void RemovePlacedObject(PlacedObject placedObject)
+    {
+        placedObjects.Remove(placedObject);
     }
 
 
