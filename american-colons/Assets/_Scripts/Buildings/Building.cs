@@ -5,11 +5,17 @@ using System.Xml;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+public enum BuildingDir
+{
+    Down = 0,
+    Right = 1,
+    Top = 2,
+    Left = 3,
+}
 
 public class Building: PlacedObject
 {
     private const string Fondation_Tag = "Fondation";
-
 
     // a reference to the game object on the scene
     GameObject gameObject;
@@ -25,14 +31,16 @@ public class Building: PlacedObject
         : base(cells, gridPosition, size)
     {
         this.gameObject = gameObject;
-        
+
+        fondation = gameObject.transform.Find(Fondation_Tag).gameObject;
+        fondation.SetActive(true);
+
+        // get the child renderers (will be removed soon)
         childRenderers = gameObject.GetComponentsInChildren<MeshRenderer>();
         foreach (MeshRenderer renderer in childRenderers)
         {
             childColors.Add(renderer.material.color);
         }
-
-        fondation = gameObject.transform.Find(Fondation_Tag).gameObject;
     }
 
     public override string ToString()

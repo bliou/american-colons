@@ -44,7 +44,7 @@ public class ConstructionSystem
     {
         Cancel();
 
-        GameSystem.Instance.SetState(GameState.Building);
+        GameSystem.Instance.SetState(GameState.Constructing);
 
         // add the temporary binding to actually place or cancel the building
         GameInputSystem.Instance.OnBuildDestroy += GameInputSystem_OnBuildDestroy;
@@ -63,7 +63,7 @@ public class ConstructionSystem
     {
         Cancel();
 
-        GameSystem.Instance.SetState(GameState.Building);
+        GameSystem.Instance.SetState(GameState.Destroying);
 
         // add the temporary binding to actually place or cancel the building
         GameInputSystem.Instance.OnBuildDestroy += GameInputSystem_OnBuildDestroy;
@@ -79,6 +79,7 @@ public class ConstructionSystem
     {
         Vector3Int gridPosition = GridSystem.Instance.GetGridCellWorldPosition();
         constructState.OnAction(gridPosition);
+        Cancel();
     }
 
     private void GameInputSystem_OnCancel(object sender, System.EventArgs e)

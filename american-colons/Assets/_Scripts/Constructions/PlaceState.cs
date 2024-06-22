@@ -5,10 +5,7 @@ using UnityEngine;
 
 public class PlaceState : IConstructState
 {
-    private BuildingModel buildingModel;
-
-    private float previewYOffset = 0.06f;
-    private GameObject previewObject;
+    private BuildingPreview buildingPreview;
 
     public PlaceState(
         BuildingModels buildingModels,
@@ -19,18 +16,17 @@ public class PlaceState : IConstructState
         {
             throw new Exception($"No ID found {selectedBuilding}");
         }
-        buildingModel = buildingModels.Models[selectedBuildingIndex].Clone();
+        BuildingModel buildingModel = buildingModels.Models[selectedBuildingIndex];
+        buildingPreview = new BuildingPreview(buildingModel);
 
         GridSystem.Instance.ShowGridVisualisation();
-        previewObject = GameSystem.Instance.InstantiateGO(buildingModel.Preview);
     }
 
     public void EndState()
     {
         GridSystem.Instance.HideGridVisualisation();
         GridSystem.Instance.ResetLastDetectedPosition();
-        GameSystem.Instance.DestroyGO(previewObject);
-        previewObject = null;
+        buildingPreview.Dispose();
     }
 
     public void OnAction(Vector3Int gridPosition)
@@ -39,16 +35,10 @@ public class PlaceState : IConstructState
             return;
 
         // for now only consider that we can place buildings
-        Vector3 position = GridSystem.Instance.CellToWorld(gridPosition) + buildingModel.GetRotationOffset();
-        List<Cell> cells = GridSystem.Instance.GetCells(gridPosition, buildingModel.GetSize());
-        GameObject gameObject = GameSystem.Instance.InstantiateGO(buildingModel.Prefab);
-        gameObject.transform.position = position;
-        gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, buildingModel.GetRotationAngle(), 0));
+        List<Cell> cells = GridSystem.Instance.GetCells(gridPosition, buildingPreview.GetSize());
 
-        Building building = new Building(gameObject, cells, gridPosition, buildingModel.GetSize());
+        Building building = new Building(buildingPreview.DumpPreview(), cells, gridPosition, buildingPreview.GetSize());
         GridSystem.Instance.AddPlacedObject(building);
-
-        UpdatePlacementPosition(position, false);
     }
 
     public void UpdateState(Vector3Int gridPosition, float scrollValue)
@@ -57,12 +47,12 @@ public class PlaceState : IConstructState
 
         bool isPlacementValid = IsPlacementValid(gridPosition);
 
-        UpdatePlacementPosition(GridSystem.Instance.CellToWorld(gridPosition) + buildingModel.GetRotationOffset(), isPlacementValid);
+        buildingPreview.UpdatePlacementPosition(GridSystem.Instance.CellToWorld(gridPosition) + buildingPreview.GetRotationOffset(), isPlacementValid);
     }
 
     private bool IsPlacementValid(Vector3Int gridPosition)
     {
-        return GridSystem.Instance.CanPlaceObjectAt(gridPosition, buildingModel.GetSize());
+        return GridSystem.Instance.CanPlaceObjectAt(gridPosition, buildingPreview.GetSize());
     }
 
     private void RotatePreview(float scrollValue) 
@@ -72,29 +62,11 @@ public class PlaceState : IConstructState
 
         if (scrollValue > 0)
         {
-            buildingModel.RotateRight();
+            buildingPreview.RotateRight();
         }
         else
         {
-            buildingModel.RotateLeft();
+            buildingPreview.RotateLeft();
         }
-        previewObject.transform.rotation = Quaternion.Euler(new Vector3(0, buildingModel.GetRotationAngle(), 0));
-    }
-
-    private void UpdatePlacementPosition(Vector3 position, bool isPlacementValid)
-    {
-        Color c = isPlacementValid ? Color.green : Color.red;
-        c.a = 0.5f;
-
-        Renderer[] renderers = previewObject.GetComponentsInChildren<Renderer>();
-        foreach (var renderer in renderers)
-        {
-            foreach (var material in renderer.materials)
-            {
-                material.color = c;
-            }
-        }
-
-        previewObject.transform.position = new Vector3(position.x, position.y + previewYOffset, position.z);
     }
 }

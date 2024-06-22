@@ -9,7 +9,8 @@ public enum GameState
 {
     Idle = 0, // default behavior, the player is not doing anything special
     Pause = 1, // the game is in pause
-    Building = 2, // the user is in the building interface
+    Constructing = 2, // the user is constructing a new object
+    Destroying = 3, // the user is destroying objects
 }
 
 public class GameSystem : MonoBehaviour

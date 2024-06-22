@@ -127,6 +127,6 @@ public class CameraSystem : MonoBehaviour
         GameState state = GameSystem.Instance.State;
 
         return state == GameState.Idle ||
-            (state == GameState.Building && GameInputSystem.Instance.ControlIsBeingPressed);
+            ((state == GameState.Constructing || state == GameState.Destroying) && GameInputSystem.Instance.ControlIsBeingPressed);
     }
 }
