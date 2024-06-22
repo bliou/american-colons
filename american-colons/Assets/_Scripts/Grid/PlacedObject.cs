@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class PlacedObject
 {
+    // To detect redundant calls
+    private bool _disposedValue;
+
     // cells on to which the placed object is placed
     private List<Cell> cells;
 
@@ -34,11 +37,30 @@ public class PlacedObject
         UniqueId = uniqueId++;
     }
 
-    public virtual void RemovePlacedObject()
+    public void Dispose()
     {
-        foreach (var cell in cells)
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    public virtual void Update(float deltaTime)
+    {
+
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposedValue)
         {
-            cell.RemovePlacedObject(this);
+            if (disposing)
+            {
+            }
+
+            foreach (var cell in cells)
+            {
+                cell.RemovePlacedObject(this);
+            }
+            _disposedValue = true;
         }
     }
 

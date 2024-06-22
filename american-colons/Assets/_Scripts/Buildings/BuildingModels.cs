@@ -23,4 +23,17 @@ public class BuildingModel
 
     [field: SerializeField]
     public GameObject Prefab { get; private set;}
+
+    [field: SerializeField]
+    public List<BuildingStep> BuildingSteps { get ; private set; }
+}
+
+// BuildingStep represent the step a building must take to be built
+[Serializable]
+public class BuildingStep
+{
+    [field: SerializeField]
+    public float ConstructionTime { get; private set; }
+
+    // TODO: add the necessary resources for this part and the number of worker required
 }

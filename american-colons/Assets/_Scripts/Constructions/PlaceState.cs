@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlaceState : IConstructState
 {
     private BuildingPreview buildingPreview;
+    private BuildingModel buildingModel;
 
     public PlaceState(
         BuildingModels buildingModels,
@@ -16,7 +17,7 @@ public class PlaceState : IConstructState
         {
             throw new Exception($"No ID found {selectedBuilding}");
         }
-        BuildingModel buildingModel = buildingModels.Models[selectedBuildingIndex];
+        buildingModel = buildingModels.Models[selectedBuildingIndex];
         buildingPreview = new BuildingPreview(buildingModel);
 
         GridSystem.Instance.ShowGridVisualisation();
@@ -27,6 +28,8 @@ public class PlaceState : IConstructState
         GridSystem.Instance.HideGridVisualisation();
         GridSystem.Instance.ResetLastDetectedPosition();
         buildingPreview.Dispose();
+        buildingModel = null;
+        buildingPreview = null;
     }
 
     public void OnAction(Vector3Int gridPosition)
@@ -37,7 +40,7 @@ public class PlaceState : IConstructState
         // for now only consider that we can place buildings
         List<Cell> cells = GridSystem.Instance.GetCells(gridPosition, buildingPreview.GetSize());
 
-        Building building = new Building(buildingPreview.DumpPreview(), cells, gridPosition, buildingPreview.GetSize());
+        Building building = new Building(buildingPreview.DumpPreview(), buildingModel, cells, gridPosition, buildingPreview.GetSize());
         GridSystem.Instance.AddPlacedObject(building);
     }
 

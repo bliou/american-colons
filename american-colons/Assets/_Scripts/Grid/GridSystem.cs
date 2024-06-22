@@ -82,6 +82,12 @@ public class GridSystem : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        // update the placedObjects
+        foreach (var placedObject in placedObjects)
+        {
+            placedObject.Update(Time.deltaTime);
+        }
+
         Vector3Int gridPosition = GetGridCellWorldPosition();
         if (gridPosition == lastDetectedPosition)
         {
@@ -138,8 +144,9 @@ public class GridSystem : MonoBehaviour
         if (placedObject == null)
             throw new Exception($"no placed object on grid");
 
-        placedObject.RemovePlacedObject();
+        placedObject.Dispose();
         placedObjects.Remove(placedObject);
+        placedObject = null;
     }
 
     public List<Cell> GetCells(Vector3Int position, Vector2Int size)

@@ -13,27 +13,51 @@ public enum BuildingDir
     Left = 3,
 }
 
+public enum BuildingState
+{
+    Constructing = 0,
+    Idle = 1,
+    Working = 2,
+    Destroying = 3,
+} 
+
 public class Building: PlacedObject
 {
-    private const string Fondation_Tag = "Fondation";
+    private const string Fondation_Name = "Fondation";
+    private const string Build_Name = "Build";
+
+    // To detect redundant calls
+    private bool _disposedValue;
 
     // a reference to the game object on the scene
-    GameObject gameObject;
+    private GameObject gameObject;
+    private BuildingModel model;
+    private List<GameObject> buildSteps;
+
+    // state of the building
+    private BuildingState state;
 
     // list all the renderers of the child object
     private MeshRenderer[] childRenderers;
     private List<Color> childColors = new();
 
-    // the fondation of the building
-    private GameObject fondation;
-
-    public Building(GameObject gameObject, List<Cell> cells, Vector3Int gridPosition, Vector2Int size)
+    public Building(GameObject gameObject, BuildingModel model, List<Cell> cells, Vector3Int gridPosition, Vector2Int size)
         : base(cells, gridPosition, size)
     {
         this.gameObject = gameObject;
+        this.model = model;
+        this.state = BuildingState.Constructing;
 
-        fondation = gameObject.transform.Find(Fondation_Tag).gameObject;
-        fondation.SetActive(true);
+        // show the fondation game object
+        gameObject.transform.Find(Fondation_Name).gameObject.SetActive(true);
+
+        // add all the child game objects that start with Build
+        for (int i = 0; i < gameObject.transform.childCount; i ++)
+        {
+            GameObject go = gameObject.transform.GetChild(i).gameObject;
+            if (go.name.StartsWith(Build_Name))
+                buildSteps.Add(go);
+        }
 
         // get the child renderers (will be removed soon)
         childRenderers = gameObject.GetComponentsInChildren<MeshRenderer>();
@@ -43,26 +67,31 @@ public class Building: PlacedObject
         }
     }
 
+    public override void Update(float deltaTime)
+    {
+        Debug.Log($"Update building: {this}");
+    }
+
     public override string ToString()
     {
         return $"building [{gridPosition.x}; {gridPosition.y}] - unique ID: {UniqueId}";
     }
 
-    public override void RemovePlacedObject()
+    protected override void Dispose(bool disposing)
     {
-        base.RemovePlacedObject();
-        EndConstruction();
-        GameSystem.Instance.DestroyGO(gameObject);
-    }
+        if (!_disposedValue)
+        {
+            if (disposing)
+            {
+                if (gameObject != null)
+                    GameSystem.Instance.DestroyGO(gameObject);
+            }
 
-    public void StartConstruction()
-    {
-        fondation.SetActive(true);
-    }
+            gameObject = null;
+            _disposedValue = true;
+        }
 
-    private void EndConstruction()
-    {
-        fondation.SetActive(false);
+        base.Dispose(disposing);
     }
 
     public void ShowSelection()
