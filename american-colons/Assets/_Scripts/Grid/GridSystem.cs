@@ -83,7 +83,13 @@ public class GridSystem : MonoBehaviour
 
     public Vector3Int GetGridCellWorldPosition()
     {
+        // if the raycast did not hit (mouse outside of the terrain), then 
+        // keep the last detected position
         Vector3 gridWorldPosition = cameraSystem.ScreenPointToRay(mask);
+        // compare only the x since the vector3 comparison does not work
+        if (gridWorldPosition.x == float.NegativeInfinity) {
+            return lastDetectedPosition;
+        }
         Vector3Int gridPosition = grid.WorldToCell(gridWorldPosition);
         gridPosition.y = 0;
 

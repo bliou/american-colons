@@ -29,13 +29,14 @@ public class CameraSystem : MonoBehaviour
         Zoom();
     }
 
+    // if the raycast did not hit, then return a negative infinity vector3
     public Vector3 ScreenPointToRay(LayerMask mask)
     {
-        Vector3 screenPointPosition = Vector3.zero;
+        Vector3 screenPointPosition = Vector3.negativeInfinity;
         Vector3 mousePosition = gameInputSystem.GetMousePosition();
         Ray ray = Camera.main.ScreenPointToRay(mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 100, mask))
+        if (Physics.Raycast(ray, out hit, float.MaxValue, mask))
         {
             screenPointPosition = hit.point;
         }
