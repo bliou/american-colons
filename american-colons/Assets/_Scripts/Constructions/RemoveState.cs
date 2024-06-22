@@ -4,30 +4,21 @@ using UnityEngine;
 
 public class RemoveState : IConstructState
 {
-    private GridSystem gridSystem;
-    private PreviewSystem previewSystem;
-    private BuildingsSystem buildingsFactory;
+    private Building highlightBuilding;
 
-    public RemoveState(
-        GridSystem gridSystem,
-        PreviewSystem previewSystem,
-        BuildingsSystem buildingsFactory)
+    public RemoveState()
     {
-        this.gridSystem = gridSystem;
-        this.previewSystem = previewSystem;
-        this.buildingsFactory = buildingsFactory;
     }
 
     public void EndState()
     {
-        gridSystem.ResetLastDetectedPosition();
-        previewSystem.StopPlacementPreview();
-        previewSystem.HighlightPlacedObject(null);
+        GridSystem.Instance.ResetLastDetectedPosition();
+        highlightBuilding = null;
     }
 
     public void OnAction(Vector3Int gridPosition)
     {
-        PlacedObject placedObject = gridSystem.GetPlacedObjectAtGridPosition(gridPosition);
+        PlacedObject placedObject = GridSystem.Instance.GetPlacedObjectAtGridPosition(gridPosition);
         
         // do nothin if there are no placed object below the mouse
         if (placedObject == null)
@@ -35,13 +26,34 @@ public class RemoveState : IConstructState
 
         // remove the object both at grid data level and in
         // the buildings factory
-        gridSystem.RemoveObjectAt(gridPosition);
-        buildingsFactory.RemoveBuilding(placedObject.UniqueId);
+        GridSystem.Instance.RemoveObjectAt(gridPosition);
+        highlightBuilding = null;
     }
 
     public void UpdateState(Vector3Int gridPosition, float scrollValue)
     {
-        PlacedObject placedObject = gridSystem.GetPlacedObjectAtGridPosition(gridPosition);
-        previewSystem.HighlightPlacedObject(placedObject);
+        PlacedObject placedObject = GridSystem.Instance.GetPlacedObjectAtGridPosition(gridPosition);
+        if (placedObject == null || !(placedObject is Building))
+            HighlightPlacedObject(null);
+
+        Building building = (Building)placedObject;
+        HighlightPlacedObject(building);
+    }
+
+    private void HighlightPlacedObject(Building building)
+    {
+        if (building == null)
+        {
+            if (highlightBuilding != null)
+                highlightBuilding.HideSelection();
+
+            highlightBuilding = null;
+            return;
+        }
+        building.ShowSelection();
+        if (highlightBuilding != null && highlightBuilding.UniqueId != building.UniqueId)
+            highlightBuilding.HideSelection();
+
+        highlightBuilding = building;
     }
 }

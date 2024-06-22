@@ -2,51 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ConstructionSystem : MonoBehaviour
+public class ConstructionSystem
 {
-    [SerializeField] private GameInputSystem gameInputSystem;
-
     // buildings template database
-    [SerializeField] private BuildingDatabaseSO buildingDatabase;
-
-    // buildings factory is in charge of building a building
-    // this will use internal recipe to construct the building
-    // step by step
-    [SerializeField] private BuildingsSystem buildingsSystem;
-
-    // the preview system is used to show the preview object on the screen
-    // before building it
-    [SerializeField] private PreviewSystem previewSystem;
-
-    // the grid system is used to know the current topology
-    // of the grid 
-    [SerializeField] private GridSystem gridSystem;
+    private BuildingModels buildingModels;
 
     private IConstructState constructState;
 
-    private void Start()
+    public ConstructionSystem(BuildingModels buildingModels)
     {
-        Cancel();
+        this.buildingModels = buildingModels;
 
-        gameInputSystem.OnStartBuilding += GameInputSystem_OnStartBuilding;
-        gameInputSystem.OnStartDestruction += GameInputSystem_OnStartDestruction;
+        GameInputSystem.Instance.OnStartBuilding += GameInputSystem_OnStartBuilding;
+        GameInputSystem.Instance.OnStartDestruction += GameInputSystem_OnStartDestruction;
     }
 
-    private void Update()
+    public void Update(float deltaTime)
     {
-        float scrollValue = gameInputSystem.GetScrollValue();
+        float scrollValue = GameInputSystem.Instance.GetScrollValue();
         if (constructState == null || 
-            (!gridSystem.IsLastPositionUpdated && (scrollValue == 0 || gameInputSystem.ControlIsBeingPressed)))
+            (!GridSystem.Instance.IsLastPositionUpdated && (scrollValue == 0 || GameInputSystem.Instance.ControlIsBeingPressed)))
             return;
 
-        Vector3Int gridPosition = gridSystem.GetGridCellWorldPosition();
+        Vector3Int gridPosition = GridSystem.Instance.GetGridCellWorldPosition();
         constructState.UpdateState(gridPosition, scrollValue);
     }
 
     private void Cancel()
     {
-        gameInputSystem.OnBuildDestroy -= GameInputSystem_OnBuildDestroy;
-        gameInputSystem.OnCancel -= GameInputSystem_OnCancel;
+        GameInputSystem.Instance.OnBuildDestroy -= GameInputSystem_OnBuildDestroy;
+        GameInputSystem.Instance.OnCancel -= GameInputSystem_OnCancel;
     
         if (constructState != null)
             constructState.EndState();
@@ -62,18 +47,15 @@ public class ConstructionSystem : MonoBehaviour
         GameSystem.Instance.SetState(GameState.Building);
 
         // add the temporary binding to actually place or cancel the building
-        gameInputSystem.OnBuildDestroy += GameInputSystem_OnBuildDestroy;
-        gameInputSystem.OnCancel += GameInputSystem_OnCancel;
+        GameInputSystem.Instance.OnBuildDestroy += GameInputSystem_OnBuildDestroy;
+        GameInputSystem.Instance.OnCancel += GameInputSystem_OnCancel;
 
         constructState = new PlaceState(
-            gridSystem, 
-            previewSystem, 
-            buildingDatabase, 
-            e.selectedBuilding,
-            buildingsSystem);
+            buildingModels, 
+            e.selectedBuilding);
 
 
-        Vector3Int gridPosition = gridSystem.GetGridCellWorldPosition();
+        Vector3Int gridPosition = GridSystem.Instance.GetGridCellWorldPosition();
         constructState.UpdateState(gridPosition, 0f);
     }
 
@@ -84,21 +66,18 @@ public class ConstructionSystem : MonoBehaviour
         GameSystem.Instance.SetState(GameState.Building);
 
         // add the temporary binding to actually place or cancel the building
-        gameInputSystem.OnBuildDestroy += GameInputSystem_OnBuildDestroy;
-        gameInputSystem.OnCancel += GameInputSystem_OnCancel;
+        GameInputSystem.Instance.OnBuildDestroy += GameInputSystem_OnBuildDestroy;
+        GameInputSystem.Instance.OnCancel += GameInputSystem_OnCancel;
 
-        constructState = new RemoveState(
-            gridSystem,
-            previewSystem,
-            buildingsSystem);
+        constructState = new RemoveState();
 
-        Vector3Int gridPosition = gridSystem.GetGridCellWorldPosition();
+        Vector3Int gridPosition = GridSystem.Instance.GetGridCellWorldPosition();
         constructState.UpdateState(gridPosition, 0f);
     }
 
     private void GameInputSystem_OnBuildDestroy(object sender, System.EventArgs e)
     {
-        Vector3Int gridPosition = gridSystem.GetGridCellWorldPosition();
+        Vector3Int gridPosition = GridSystem.Instance.GetGridCellWorldPosition();
         constructState.OnAction(gridPosition);
     }
 

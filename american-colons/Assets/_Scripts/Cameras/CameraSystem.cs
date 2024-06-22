@@ -3,8 +3,8 @@ using Cinemachine;
 
 public class CameraSystem : MonoBehaviour
 {
+    public static CameraSystem Instance { get; private set; }
 
-    [SerializeField] private GameInputSystem gameInputSystem;
     [SerializeField] private CinemachineVirtualCamera cinemachineCamera;
 
     [SerializeField] private float moveSpeed = 50f;
@@ -20,6 +20,18 @@ public class CameraSystem : MonoBehaviour
 
     private float targetFieldOfView = 50f;
 
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogError("instance already exists");
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+
     private void Update()
     {
         MoveCamera();
@@ -33,7 +45,7 @@ public class CameraSystem : MonoBehaviour
     public Vector3 ScreenPointToRay(LayerMask mask)
     {
         Vector3 screenPointPosition = Vector3.negativeInfinity;
-        Vector3 mousePosition = gameInputSystem.GetMousePosition();
+        Vector3 mousePosition = GameInputSystem.Instance.GetMousePosition();
         Ray ray = Camera.main.ScreenPointToRay(mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, float.MaxValue, mask))
@@ -46,7 +58,7 @@ public class CameraSystem : MonoBehaviour
 
     private void MoveCamera()
     {
-        Vector2 moveDirNormalized = gameInputSystem.GetMovementVectorNormalized();
+        Vector2 moveDirNormalized = GameInputSystem.Instance.GetMovementVectorNormalized();
         Vector3 inputDir = new Vector3(moveDirNormalized.x, 0, moveDirNormalized.y);
 
         Vector3 moveDir = transform.forward * inputDir.z + transform.right*inputDir.x;
@@ -59,7 +71,7 @@ public class CameraSystem : MonoBehaviour
             return;
 
         Vector3 inputDir = new Vector3(0, 0, 0);
-        Vector2 mousePosition = gameInputSystem.GetMousePosition();
+        Vector2 mousePosition = GameInputSystem.Instance.GetMousePosition();
 
         if (mousePosition.x < edgeScrollSize) inputDir.x = -1f;
         if (mousePosition.x > Screen.width - edgeScrollSize) inputDir.x = 1f;
@@ -77,7 +89,7 @@ public class CameraSystem : MonoBehaviour
             return;
 
         Vector3 inputDir = new Vector3(0, 0, 0);
-        Vector2 dragPanDelta = gameInputSystem.GetMouseDragDeltaVector();
+        Vector2 dragPanDelta = GameInputSystem.Instance.GetMouseDragDeltaVector();
 
         inputDir.x = dragPanDelta.x;
         inputDir.z = dragPanDelta.y;
@@ -88,7 +100,7 @@ public class CameraSystem : MonoBehaviour
 
     private void RotateCamera()
     {
-        float rotationDirection = gameInputSystem.GetRotationDirection();
+        float rotationDirection = GameInputSystem.Instance.GetRotationDirection();
         transform.eulerAngles += new Vector3(0, rotationDirection * rotationSpeed * Time.deltaTime, 0);
     }
 
@@ -99,7 +111,7 @@ public class CameraSystem : MonoBehaviour
             return;
         }
 
-        float scrollValue = gameInputSystem.GetScrollValue();
+        float scrollValue = GameInputSystem.Instance.GetScrollValue();
         if (scrollValue > 0)
             targetFieldOfView -= 5;
         if (scrollValue < 0)
@@ -115,6 +127,6 @@ public class CameraSystem : MonoBehaviour
         GameState state = GameSystem.Instance.State;
 
         return state == GameState.Idle ||
-            (state == GameState.Building && gameInputSystem.ControlIsBeingPressed);
+            (state == GameState.Building && GameInputSystem.Instance.ControlIsBeingPressed);
     }
 }

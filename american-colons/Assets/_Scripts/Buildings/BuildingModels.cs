@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu()]
-public class BuildingDatabaseSO : ScriptableObject
+public class BuildingModels : ScriptableObject
 {
-    public List<BuildingData> Buildings;
+    public List<BuildingModel> Models;
 }
 
 public enum BuildingDir
@@ -18,7 +18,7 @@ public enum BuildingDir
 }
 
 [Serializable]
-public class BuildingData
+public class BuildingModel
 {
     [field: SerializeField]
     public string Name { get; private set; }
@@ -37,10 +37,17 @@ public class BuildingData
 
     private BuildingDir direction;    
 
-
-    public void ResetDir()
+    public BuildingModel Clone()
     {
-        direction = BuildingDir.Down;
+        return new BuildingModel
+        {
+            Name = Name,
+            ID = ID,
+            Size = Size,
+            Preview = Preview,
+            Prefab = Prefab,
+            direction = BuildingDir.Down
+        };
     }
 
     public void RotateLeft()

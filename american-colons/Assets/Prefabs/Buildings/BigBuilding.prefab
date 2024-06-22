@@ -44,7 +44,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5451780559411032773}
-  - component: {fileID: 6146633328861104155}
   m_Layer: 6
   m_Name: BigBuilding
   m_TagString: Untagged
@@ -69,19 +68,6 @@ Transform:
   - {fileID: 7513383481137750259}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6146633328861104155
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2668378315538197255}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 876b840eda811c74f8495b967d394665, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fondation: {fileID: 2821665812283681490}
 --- !u!1 &2821665812283681490
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,6 +288,7 @@ MonoBehaviour:
   isLastPart: 1
   nextPart: {fileID: 0}
   constructionTime: 15
+  buildingMaterial: {fileID: 0}
 --- !u!1 &3409655842803321682
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,6 +388,7 @@ MonoBehaviour:
   isLastPart: 0
   nextPart: {fileID: 5398967825621700970}
   constructionTime: 10
+  buildingMaterial: {fileID: 0}
 --- !u!1 &7602311041087915647
 GameObject:
   m_ObjectHideFlags: 0
@@ -500,6 +488,7 @@ MonoBehaviour:
   isLastPart: 0
   nextPart: {fileID: 4207590543475896365}
   constructionTime: 5
+  buildingMaterial: {fileID: 0}
 --- !u!1 &7671359372456156851
 GameObject:
   m_ObjectHideFlags: 0
@@ -599,3 +588,4 @@ MonoBehaviour:
   isLastPart: 0
   nextPart: {fileID: 6602049141614668804}
   constructionTime: 5
+  buildingMaterial: {fileID: 0}

@@ -3,38 +3,48 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-public class Building : MonoBehaviour
+
+public class Building: PlacedObject
 {
+    private const string Fondation_Tag = "Fondation";
+
+
+    // a reference to the game object on the scene
+    GameObject gameObject;
+
     // list all the renderers of the child object
     private MeshRenderer[] childRenderers;
     private List<Color> childColors = new();
 
     // the fondation of the building
-    [SerializeField] private GameObject fondation;
+    private GameObject fondation;
 
-    // reference to the related placed object
-    private PlacedObject placedObject;
-
-    private void Start()
+    public Building(GameObject gameObject, List<Cell> cells, Vector3Int gridPosition, Vector2Int size)
+        : base(cells, gridPosition, size)
     {
-        childRenderers = GetComponentsInChildren<MeshRenderer>();
+        this.gameObject = gameObject;
+        
+        childRenderers = gameObject.GetComponentsInChildren<MeshRenderer>();
         foreach (MeshRenderer renderer in childRenderers)
         {
             childColors.Add(renderer.material.color);
         }
+
+        fondation = gameObject.transform.Find(Fondation_Tag).gameObject;
     }
 
-    private void Update()
+    public override string ToString()
     {
-        
+        return $"building [{gridPosition.x}; {gridPosition.y}] - unique ID: {UniqueId}";
     }
 
-    public void SetPlacedObject(PlacedObject placedObject)
+    public override void RemovePlacedObject()
     {
-        this.placedObject = placedObject;
-        this.placedObject.OnHighlight += ShowSelection;
-        this.placedObject.OnStopHighlighting += HideSelection;
+        base.RemovePlacedObject();
+        EndConstruction();
+        GameSystem.Instance.DestroyGO(gameObject);
     }
 
     public void StartConstruction()
@@ -47,14 +57,7 @@ public class Building : MonoBehaviour
         fondation.SetActive(false);
     }
 
-    private void OnDestroy()
-    {
-        Destroy(gameObject);
-        this.placedObject.OnHighlight -= ShowSelection;
-        this.placedObject.OnStopHighlighting -= HideSelection;
-    }
-
-    private void ShowSelection(object sender, EventArgs e)
+    public void ShowSelection()
     {
         foreach (MeshRenderer renderer in childRenderers)
         {
@@ -62,7 +65,7 @@ public class Building : MonoBehaviour
         }
     }
 
-    private void HideSelection(object sender, EventArgs e)
+    public void HideSelection()
     {
         for (int i = 0; i < childRenderers.Length; i++)
         {

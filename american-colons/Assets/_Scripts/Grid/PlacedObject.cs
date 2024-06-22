@@ -5,20 +5,14 @@ using UnityEngine;
 
 public class PlacedObject
 {
-    public event EventHandler OnHighlight;
-    public event EventHandler OnStopHighlighting;
-
     // cells on to which the placed object is placed
     private List<Cell> cells;
 
     // grid position of this placed object
-    private Vector3Int gridPosition;
+    protected Vector3Int gridPosition;
 
     // size of the placed object
-    private Vector2Int size;
-
-    // if set to true the placed object is being highlighted
-    private bool isHighlighted;
+    protected Vector2Int size;
 
     // unique identifier of this placed object
     public int UniqueId { get; private set; }
@@ -26,6 +20,13 @@ public class PlacedObject
 
     public PlacedObject(List<Cell> cells, Vector3Int gridPosition, Vector2Int size)
     {
+        foreach (var cell in cells)
+        {
+            if (!cell.CanPlaceObject())
+                throw new Exception($"cannot place object on cell: {cell}");
+            cell.AddPlacedObject(this);
+        }
+
         this.cells = cells;
         this.gridPosition = gridPosition;
         this.size = size;
@@ -33,7 +34,7 @@ public class PlacedObject
         UniqueId = uniqueId++;
     }
 
-    public void RemovePlacedObject()
+    public virtual void RemovePlacedObject()
     {
         foreach (var cell in cells)
         {
@@ -53,20 +54,5 @@ public class PlacedObject
         }
 
         return false;
-    }
-
-    public void Highlight()
-    {
-        if (isHighlighted)
-            return;
-
-        isHighlighted = true;
-        OnHighlight?.Invoke(this, EventArgs.Empty);
-    }
-
-    public void StopHighlighting()
-    {
-        isHighlighted = false;
-        OnStopHighlighting?.Invoke(this, EventArgs.Empty);
     }
 }

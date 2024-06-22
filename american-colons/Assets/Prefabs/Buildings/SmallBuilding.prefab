@@ -242,6 +242,7 @@ MonoBehaviour:
   isLastPart: 1
   nextPart: {fileID: 0}
   constructionTime: 5
+  buildingMaterial: {fileID: 0}
 --- !u!1 &5046463000524144139
 GameObject:
   m_ObjectHideFlags: 0
@@ -251,7 +252,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7049004728323854828}
-  - component: {fileID: 846946635750288721}
   m_Layer: 0
   m_Name: SmallBuilding
   m_TagString: Selected
@@ -276,19 +276,6 @@ Transform:
   - {fileID: 3955916019404541854}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &846946635750288721
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5046463000524144139}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 876b840eda811c74f8495b967d394665, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fondation: {fileID: 1583151296920309393}
 --- !u!1 &7392180311293543346
 GameObject:
   m_ObjectHideFlags: 0

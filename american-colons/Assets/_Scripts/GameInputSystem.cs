@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class GameInputSystem : MonoBehaviour
 {
+    public static GameInputSystem Instance { get; private set; }
+
     public event EventHandler<OnStartBuildingEventArgs> OnStartBuilding;
     public event EventHandler OnCancel;
     public event EventHandler OnBuildDestroy;
@@ -16,8 +18,17 @@ public class GameInputSystem : MonoBehaviour
 
     private PlayerInputActions playerInputActions;
 
-    private void Awake() 
+    private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogError("instance already exists");
+        }
+        else
+        {
+            Instance = this;
+        }
+
         playerInputActions = new PlayerInputActions();
         playerInputActions.Building.StartBuilding.performed += StartBuilding_performed;
         playerInputActions.Building.Cancel.performed += Cancel_performed;

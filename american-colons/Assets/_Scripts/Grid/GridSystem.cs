@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GridSystem : MonoBehaviour
 {
+    public static GridSystem Instance { get; private set; }
+
     // grid class of the unity system.
     // allows us to get the cell from the mouse cursor and
     // other positions easily
@@ -21,9 +23,6 @@ public class GridSystem : MonoBehaviour
     // a reference to the terrain
     private Terrain terrain;
 
-    // the camera system is used to calculate the grid
-    // world position
-    [SerializeField] private CameraSystem cameraSystem;
     // mask onto which we apply the ray cast from the camera
     // system to get the grid world position
     [SerializeField] private LayerMask mask;
@@ -35,6 +34,18 @@ public class GridSystem : MonoBehaviour
     private Vector3Int lastDetectedPosition = Vector3Int.zero;
 
     public bool IsLastPositionUpdated { get; private set; } = false ;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogError("instance already exists");
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
 
     // Start is called before the first frame update
     private void Start()
@@ -85,7 +96,7 @@ public class GridSystem : MonoBehaviour
     {
         // if the raycast did not hit (mouse outside of the terrain), then 
         // keep the last detected position
-        Vector3 gridWorldPosition = cameraSystem.ScreenPointToRay(mask);
+        Vector3 gridWorldPosition = CameraSystem.Instance.ScreenPointToRay(mask);
         // compare only the x since the vector3 comparison does not work
         if (gridWorldPosition.x == float.NegativeInfinity) {
             return lastDetectedPosition;
@@ -116,22 +127,9 @@ public class GridSystem : MonoBehaviour
         lastDetectedPosition = Vector3Int.zero;
     }
 
-    public PlacedObject PlaceObjectAt(
-        Vector3Int gridPosition,
-        Vector2Int size)
+    public void AddPlacedObject(PlacedObject placedObject)
     {
-        List<Cell> cellsToOccupy = GetCells(gridPosition, size);
-        PlacedObject placedObject = new PlacedObject(cellsToOccupy, gridPosition, size);
-
-        foreach (var cell in cellsToOccupy)
-        {
-            if (!cell.CanPlaceObject())
-                throw new Exception($"cannot place object on cell: {cell}");
-            cell.AddPlacedObject(placedObject);
-        }
-
         placedObjects.Add(placedObject);
-        return placedObject;
     }
 
     public void RemoveObjectAt(Vector3Int gridPosition)
