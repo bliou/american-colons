@@ -82,12 +82,6 @@ public class GridSystem : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        // update the placedObjects
-        foreach (var placedObject in placedObjects)
-        {
-            placedObject.Update(Time.deltaTime);
-        }
-
         Vector3Int gridPosition = GetGridCellWorldPosition();
         if (gridPosition == lastDetectedPosition)
         {

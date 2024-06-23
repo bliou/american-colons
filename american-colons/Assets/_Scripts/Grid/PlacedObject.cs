@@ -43,11 +43,6 @@ public class PlacedObject
         GC.SuppressFinalize(this);
     }
 
-    public virtual void Update(float deltaTime)
-    {
-
-    }
-
     protected virtual void Dispose(bool disposing)
     {
         if (!_disposedValue)

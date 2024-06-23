@@ -25,12 +25,12 @@ public class BuildingModel
     public GameObject Prefab { get; private set;}
 
     [field: SerializeField]
-    public List<BuildingStep> BuildingSteps { get ; private set; }
+    public List<BuildStep> BuildSteps { get ; private set; }
 }
 
-// BuildingStep represent the step a building must take to be built
+// BuildStep represent the step a building must take to be built
 [Serializable]
-public class BuildingStep
+public class BuildStep
 {
     [field: SerializeField]
     public float ConstructionTime { get; private set; }

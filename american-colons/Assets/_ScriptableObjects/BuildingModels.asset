@@ -16,21 +16,27 @@ MonoBehaviour:
   - <Name>k__BackingField: BigBuilding
     <ID>k__BackingField: 0
     <Size>k__BackingField: {x: 5, y: 5}
-    <Preview>k__BackingField: {fileID: 2668378315538197255, guid: 8aa8955dd2f1d004e99bddb7aaadbfdd,
-      type: 3}
     <Prefab>k__BackingField: {fileID: 2668378315538197255, guid: c7e6ef858e68b314f8ed1b7a7e2166dd,
       type: 3}
+    <BuildSteps>k__BackingField:
+    - <ConstructionTime>k__BackingField: 3.14
+    - <ConstructionTime>k__BackingField: 2.4
+    - <ConstructionTime>k__BackingField: 7.5
+    - <ConstructionTime>k__BackingField: 1.5
   - <Name>k__BackingField: SmallBuilding
     <ID>k__BackingField: 1
     <Size>k__BackingField: {x: 1, y: 1}
-    <Preview>k__BackingField: {fileID: 5046463000524144139, guid: e44f9aba90ae4f446a5b972c1ed3a7cf,
-      type: 3}
     <Prefab>k__BackingField: {fileID: 5046463000524144139, guid: 9f6704f163e3255478075a73b564b89e,
       type: 3}
+    <BuildSteps>k__BackingField:
+    - <ConstructionTime>k__BackingField: 2.36
   - <Name>k__BackingField: RectangularBuilding
     <ID>k__BackingField: 2
     <Size>k__BackingField: {x: 5, y: 2}
-    <Preview>k__BackingField: {fileID: 2668378315538197255, guid: 9d403f1a9b05d944288a4ced44040cff,
-      type: 3}
     <Prefab>k__BackingField: {fileID: 2668378315538197255, guid: 4b66554e14019ef46a4cebdbb37ff0aa,
       type: 3}
+    <BuildSteps>k__BackingField:
+    - <ConstructionTime>k__BackingField: 8.6
+    - <ConstructionTime>k__BackingField: 1.4
+    - <ConstructionTime>k__BackingField: 3.67
+    - <ConstructionTime>k__BackingField: 2.68
